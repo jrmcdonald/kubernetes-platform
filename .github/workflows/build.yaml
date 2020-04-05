@@ -10,7 +10,13 @@ jobs:
     
     steps:
       - uses: actions/checkout@master
-        
+      
+      - name: install wg
+        run: |
+          sudo add-apt-repository ppa:wireguard/wireguard
+          sudo apt update
+          sudo apt install wireguard
+          
       - name: fmt
         uses: hashicorp/terraform-github-actions@master
         with:
