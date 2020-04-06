@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@master
           
       - name: fmt
-        uses: hashicorp/terraform-github-actions@master
+        uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: 'fmt'
@@ -20,7 +20,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: init
-        uses: hashicorp/terraform-github-actions@master
+        uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: 'init'
@@ -30,7 +30,7 @@ jobs:
           TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_TOKEN }}
           
       - name: validate
-        uses: hashicorp/terraform-github-actions@master
+        uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: 'validate'
@@ -38,7 +38,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: plan
-        uses: hashicorp/terraform-github-actions@master
+        uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: 'plan'
