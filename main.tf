@@ -9,3 +9,7 @@ module "hobby-kube" {
   cloudflare_email     = "${var.cloudflare_email}"
   cloudflare_api_token = "${var.cloudflare_api_token}"
 }
+
+module "ingress" {
+  source = "./modules/ingress"
+}
