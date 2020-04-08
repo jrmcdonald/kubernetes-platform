@@ -11,17 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: debugging
+      - name: set GNUPGHOME
         run: |
-          pwd
-          ls -l ${GITHUB_WORKSPACE}
-          ls -l $GITHUB_WORKSPACE
-          cd $GITHUB_WORKSPACE
-          mkdir .gnupg
+          echo ::set-env name=GNUPGHOME::"${GITHUB_WORKSPACE}/.gnupg"
 
       - name: gpg setup
-        env:
-          GNUPGHOME: "${GITHUB_WORKSPACE}/.gnupg"
         run: |
           echo $GNUPGHOME
           echo -e "${{ secrets.CI_GPG_PUBKEY }}" | gpg --import
