@@ -2,15 +2,34 @@ name: build
 
 on:
   - pull_request
-  
+
 jobs:
   terraform:
-  
+
+    env:
+      GNUPGHOME: ${GITHUB_WORKSPACE}/.gnupg
+
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@master
-          
+
+      - name: gpg import
+        run: |
+          export GPG_TMP=$(mktemp -d)
+          echo ${{ secrets.CI_GPG_PUBKEY }} > ${GPG_TMP}/pub.asc
+          echo ${{ secrets.CI_GPG_SUBKEY }} > ${GPG_TMP}/sub.asc
+          gpg --import ${GPG_TMP}/pub.asc
+          gpg --import ${GPG_TMP}/sub.asc
+          gpg --list-keys
+          gpg --list-secret-keys
+          rm -rf ${GPG_TMP}
+
+      - name: postdeploy
+        uses: jrmcdonald/blackbox-github-actions@v0.1.0
+        with:
+          bb_actions_subcommand: 'postdeploy'
+
       - name: fmt
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
@@ -18,7 +37,7 @@ jobs:
           tf_actions_subcommand: 'fmt'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: init
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
@@ -26,9 +45,8 @@ jobs:
           tf_actions_subcommand: 'init'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_TOKEN }}
-          
+          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+
       - name: validate
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
@@ -36,7 +54,7 @@ jobs:
           tf_actions_subcommand: 'validate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: plan
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
@@ -44,5 +62,9 @@ jobs:
           tf_actions_subcommand: 'plan'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_TOKEN }}
+          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+
+      - name: shred
+        uses: jrmcdonald/blackbox-github-actions@v0.1.0
+        with:
+          bb_actions_subcommand: 'shred_all_files'
