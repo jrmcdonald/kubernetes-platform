@@ -11,9 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: gpg setup
+      - name: set GNUPGHOME
         run: |
           echo ::set-env name=GNUPGHOME::"${GITHUB_WORKSPACE}/.gnupg"
+
+      - name: gpg setup
+        run: |
           echo -e "${{ secrets.CI_GPG_PUBKEY }}" | gpg --import
           echo -e "${{ secrets.CI_GPG_SUBKEY }}" | gpg --import
           gpg --list-keys
