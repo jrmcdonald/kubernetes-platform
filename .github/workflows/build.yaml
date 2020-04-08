@@ -7,7 +7,7 @@ jobs:
   terraform:
 
     env:
-      GNUPGHOME: ${GITHUB_WORKSPACE}/.gnupg
+      GNUPGHOME: "${GITHUB_WORKSPACE}/.gnupg"
 
     runs-on: ubuntu-latest
 
