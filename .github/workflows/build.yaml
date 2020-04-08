@@ -17,8 +17,8 @@ jobs:
       - name: debugging
         run: |
           pwd
-          ll ${GITHUB_WORKSPACE}
-          ll $GITHUB_WORKSPACE
+          ls -l ${GITHUB_WORKSPACE}
+          ls -l $GITHUB_WORKSPACE
           cd $GITHUB_WORKSPACE
           mkdir .gnupg
 
