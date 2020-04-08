@@ -16,14 +16,10 @@ jobs:
 
       - name: gpg import
         run: |
-          export GPG_TMP=$(mktemp -d)
-          echo ${{ secrets.CI_GPG_PUBKEY }} > ${GPG_TMP}/pub.asc
-          echo ${{ secrets.CI_GPG_SUBKEY }} > ${GPG_TMP}/sub.asc
-          gpg --import ${GPG_TMP}/pub.asc
-          gpg --import ${GPG_TMP}/sub.asc
+          echo -e ${{ secrets.CI_GPG_PUBKEY }} | gpg --import
+          echo -e ${{ secrets.CI_GPG_SUBKEY }} | gpg --import
           gpg --list-keys
           gpg --list-secret-keys
-          rm -rf ${GPG_TMP}
 
       - name: postdeploy
         uses: jrmcdonald/blackbox-github-actions@v0.1.0
