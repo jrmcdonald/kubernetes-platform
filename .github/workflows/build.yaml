@@ -14,12 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: gpg import
-        run: |
-          echo -e ${{ secrets.CI_GPG_PUBKEY }} | gpg --import
-          echo -e ${{ secrets.CI_GPG_SUBKEY }} | gpg --import
-          gpg --list-keys
-          gpg --list-secret-keys
+      - name: gpg import public key
+        run: echo -e "${{ secrets.CI_GPG_PUBKEY }}" | gpg --import
+
+      - name: gpg import public key
+        run: echo -e "${{ secrets.CI_GPG_SUBKEY }}" | gpg --import
+
+      - name: gpg list keys
+        run: gpg --list-keys
+
+      - name: gpg list keys
+        run: gpg --list-secret-keys
 
       - name: postdeploy
         uses: jrmcdonald/blackbox-github-actions@v0.1.0
