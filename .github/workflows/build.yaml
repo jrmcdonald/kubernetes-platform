@@ -6,9 +6,6 @@ on:
 jobs:
   terraform:
 
-    env:
-      GNUPGHOME: "${GITHUB_WORKSPACE}/.gnupg"
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,17 +19,15 @@ jobs:
           cd $GITHUB_WORKSPACE
           mkdir .gnupg
 
-      - name: gpg import public key
-        run: echo -e "${{ secrets.CI_GPG_PUBKEY }}" | gpg --import
-
-      - name: gpg import public key
-        run: echo -e "${{ secrets.CI_GPG_SUBKEY }}" | gpg --import
-
-      - name: gpg list keys
-        run: gpg --list-keys
-
-      - name: gpg list keys
-        run: gpg --list-secret-keys
+      - name: gpg setup
+        env:
+          GNUPGHOME: "${GITHUB_WORKSPACE}/.gnupg"
+        run: |
+          echo $GNUPGHOME
+          echo -e "${{ secrets.CI_GPG_PUBKEY }}" | gpg --import
+          echo -e "${{ secrets.CI_GPG_SUBKEY }}" | gpg --import
+          gpg --list-keys
+          gpg --list-secret-keys
 
       - name: postdeploy
         uses: jrmcdonald/blackbox-github-actions@v0.1.0
