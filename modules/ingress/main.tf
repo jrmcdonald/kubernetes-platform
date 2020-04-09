@@ -11,6 +11,6 @@ resource "helm_release" "ingress" {
   namespace  = "ingress"
 
   values = [
-    "${file("values.yaml")}"
+    "${file("${path.module}/values.yaml")}"
   ]
 }
