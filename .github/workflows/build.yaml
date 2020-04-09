@@ -3,6 +3,9 @@ name: build
 on:
   - pull_request
 
+env:
+  tf_version: 'latest'
+
 jobs:
   terraform:
 
@@ -30,7 +33,7 @@ jobs:
       - name: fmt
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
-          tf_actions_version: 0.12.24
+          tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'fmt'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +41,7 @@ jobs:
       - name: init
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
-          tf_actions_version: 0.12.24
+          tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'init'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,7 +50,7 @@ jobs:
       - name: validate
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
-          tf_actions_version: 0.12.24
+          tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'validate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,7 +58,7 @@ jobs:
       - name: plan
         uses: jrmcdonald/terraform-github-actions@v0.1.0
         with:
-          tf_actions_version: 0.12.24
+          tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'plan'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
