@@ -24,6 +24,15 @@ jobs:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
           
+      - name: init
+        uses: jrmcdonald/terraform-github-actions@v0.2.1
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_subcommand: 'init'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+          
       - name: apply
         uses: jrmcdonald/terraform-github-actions@v0.2.1
         with:
