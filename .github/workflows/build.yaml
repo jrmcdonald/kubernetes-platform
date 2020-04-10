@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: postdeploy
-        uses: jrmcdonald/blackbox-github-actions@v0.1.4
+        uses: jrmcdonald/blackbox-github-actions@v0.2.0
         with:
           bb_actions_subcommand: 'postdeploy'
         env:
@@ -57,7 +57,7 @@ jobs:
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
 
       - name: shred
-        uses: jrmcdonald/blackbox-github-actions@v0.1.4
+        uses: jrmcdonald/blackbox-github-actions@v0.2.0
         with:
           bb_actions_subcommand: 'shred_all_files'
         env:
