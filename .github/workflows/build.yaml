@@ -14,21 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: set GNUPGHOME
-        run: |
-          echo ::set-env name=GNUPGHOME::"${GITHUB_WORKSPACE}/.gnupg"
-
-      - name: gpg setup
-        run: |
-          echo -e "${{ secrets.CI_GPG_PUBKEY }}" | gpg --import
-          echo -e "${{ secrets.CI_GPG_SUBKEY }}" | gpg --import
-          gpg --list-keys
-          gpg --list-secret-keys
-
       - name: postdeploy
-        uses: jrmcdonald/blackbox-github-actions@v0.1.4
+        uses: jrmcdonald/blackbox-github-actions@v0.2.0
         with:
           bb_actions_subcommand: 'postdeploy'
+        env:
+          BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
+          BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
 
       - name: fmt
         uses: jrmcdonald/terraform-github-actions@v0.1.0
@@ -65,6 +57,9 @@ jobs:
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
 
       - name: shred
-        uses: jrmcdonald/blackbox-github-actions@v0.1.4
+        uses: jrmcdonald/blackbox-github-actions@v0.2.0
         with:
           bb_actions_subcommand: 'shred_all_files'
+        env:
+          BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
+          BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
