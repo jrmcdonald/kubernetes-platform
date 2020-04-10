@@ -1,7 +1,9 @@
 name: build
 
 on:
-  - pull_request
+  push:
+    branches:
+      - 'master'
 
 env:
   tf_version: 'latest'
@@ -21,39 +23,15 @@ jobs:
         env:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
-
-      - name: fmt
+          
+      - name: apply
         uses: jrmcdonald/terraform-github-actions@v0.2.1
         with:
           tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'fmt'
+          tf_actions_subcommand: 'apply'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: init
-        uses: jrmcdonald/terraform-github-actions@v0.2.1
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
-
-      - name: validate
-        uses: jrmcdonald/terraform-github-actions@v0.2.1
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'validate'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: plan
-        uses: jrmcdonald/terraform-github-actions@v0.2.1
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
 
       - name: shred
@@ -63,3 +41,9 @@ jobs:
         env:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
+          
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: kubeconfig
+          path: ${HOME}/.kube
