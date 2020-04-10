@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: postdeploy
-        uses: jrmcdonald/blackbox-github-actions@v0.2.0
+        uses: jrmcdonald/blackbox-github-actions@v0.1.4
         with:
           bb_actions_subcommand: 'postdeploy'
         env:
@@ -23,7 +23,7 @@ jobs:
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
 
       - name: fmt
-        uses: jrmcdonald/terraform-github-actions@v0.1.0
+        uses: jrmcdonald/terraform-github-actions@v0.2.1
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'fmt'
@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: init
-        uses: jrmcdonald/terraform-github-actions@v0.1.0
+        uses: jrmcdonald/terraform-github-actions@v0.2.1
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'init'
@@ -40,7 +40,7 @@ jobs:
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
 
       - name: validate
-        uses: jrmcdonald/terraform-github-actions@v0.1.0
+        uses: jrmcdonald/terraform-github-actions@v0.2.1
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'validate'
@@ -48,7 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: plan
-        uses: jrmcdonald/terraform-github-actions@v0.1.0
+        uses: jrmcdonald/terraform-github-actions@v0.2.1
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'plan'
@@ -57,7 +57,7 @@ jobs:
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
 
       - name: shred
-        uses: jrmcdonald/blackbox-github-actions@v0.2.0
+        uses: jrmcdonald/blackbox-github-actions@v0.1.4
         with:
           bb_actions_subcommand: 'shred_all_files'
         env:
