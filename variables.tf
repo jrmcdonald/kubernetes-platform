@@ -10,7 +10,7 @@ variable "hcloud_token" {
 
 variable "hcloud_ssh_keys" {
   type    = list(string)
-  default = ["cardno:000611341223"]
+  default = ["cardno:000611341223, "iOS, "github-ci@qwyck.net"]
 }
 
 /* cloudflare dns */
