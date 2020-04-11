@@ -25,7 +25,7 @@ jobs:
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
           
       - name: init
-        uses: jrmcdonald/terraform-github-actions@v0.2.1
+        uses: jrmcdonald/terraform-github-actions@v0.2.2
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'init'
@@ -34,7 +34,7 @@ jobs:
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
           
       - name: apply
-        uses: jrmcdonald/terraform-github-actions@v0.2.1
+        uses: jrmcdonald/terraform-github-actions@v0.2.2
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'apply'
@@ -45,6 +45,7 @@ jobs:
 
       - name: shred
         uses: jrmcdonald/blackbox-github-actions@v0.2.0
+        if: always()
         with:
           bb_actions_subcommand: 'shred_all_files'
         env:
@@ -52,7 +53,6 @@ jobs:
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
           
       - uses: actions/upload-artifact@v1
-        if: always()
         with:
           name: kubeconfig
           path: ${HOME}/.kube
