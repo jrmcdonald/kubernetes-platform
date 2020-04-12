@@ -20,3 +20,12 @@ module "hobby-kube" {
   cloudflare_email     = "${var.cloudflare_email}"
   cloudflare_api_token = "${var.cloudflare_api_token}"
 }
+
+provisioner "local-exec" {
+  command = <<EOT
+    kubectl get nodes
+    kubectl config get-contexts
+    ls -l $HOME/.kube
+    cp -r $HOME/.kube $GITHUB_WORKSPACE
+  EOT
+}

@@ -70,19 +70,17 @@ jobs:
         
       - name: debug folders
         run: |
-          echo $HOME
-          echo ${{ env.HOME }}
-          ls -al $HOME/.kube
+          ls -al .kube
           
       - name: check for .kube
         id: check_kube
         uses: andstor/file-existence-action@v1
         with:
-          files: "$HOME/.kube"
+          files: ".kube"
           
       - name: upload .kube
         uses: actions/upload-artifact@v1
         if: steps.check_kube.outputs.files_exists == 'true'
         with:
           name: kubeconfig
-          path: ${{ env.HOME }}/.kube
+          path: .kube
