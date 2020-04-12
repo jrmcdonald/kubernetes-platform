@@ -40,6 +40,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
           
+      - name: destroy
+        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_subcommand: 'destroy'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+          
       - name: apply
         uses: jrmcdonald/terraform-github-actions@v0.2.2
         with:
@@ -58,21 +67,15 @@ jobs:
         env:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
-          
-      - name: Debug Action
-        uses: hmarr/debug-action@v1.0.0
         
       - name: debug folders
-        run: |
-          ls -alR ${{ env.HOME }}
-          ls -alR /github/home
-          ls -alR .
+        run: ls -al ${{ env.HOME }}/.kube
           
       - name: check for .kube
         id: check_kube
         uses: andstor/file-existence-action@v1
         with:
-          files: ${{ env.HOME }}/.kube
+          files: "$HOME/.kube"
           
       - name: upload .kube
         uses: actions/upload-artifact@v1
