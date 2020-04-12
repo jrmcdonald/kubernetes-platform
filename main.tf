@@ -22,8 +22,6 @@ module "hobby-kube" {
 }
 
 resource "null_resource" "kubeconfig" {
-  depends_on = ["null_resource.kubectl"]
-
   provisioner "local-exec" {
     command = <<EOT
       kubectl get nodes
