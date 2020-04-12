@@ -21,11 +21,15 @@ module "hobby-kube" {
   cloudflare_api_token = "${var.cloudflare_api_token}"
 }
 
-provisioner "local-exec" {
-  command = <<EOT
-    kubectl get nodes
-    kubectl config get-contexts
-    ls -l $HOME/.kube
-    cp -r $HOME/.kube $GITHUB_WORKSPACE
-  EOT
+resource "null_resource" "kubeconfig" {
+  depends_on = ["null_resource.kubectl"]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      kubectl get nodes
+      kubectl config get-contexts
+      ls -l $HOME/.kube
+      cp -r $HOME/.kube $GITHUB_WORKSPACE
+    EOT
+  }
 }
