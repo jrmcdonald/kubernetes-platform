@@ -67,20 +67,16 @@ jobs:
         env:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
-        
-      - name: debug folders
-        run: |
-          ls -al .kube
           
-      - name: check for .kube
+      - names: check for kubeconfig
         id: check_kube
         uses: andstor/file-existence-action@v1
         with:
-          files: ".kube"
+          files: "kubeconfig"
           
-      - name: upload .kube
+      - name: upload kubeconfig
         uses: actions/upload-artifact@v1
         if: steps.check_kube.outputs.files_exists == 'true'
         with:
           name: kubeconfig
-          path: .kube
+          path: kubeconfig
