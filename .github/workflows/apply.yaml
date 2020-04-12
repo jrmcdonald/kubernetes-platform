@@ -59,6 +59,15 @@ jobs:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
           
+      - name: Debug Action
+        uses: hmarr/debug-action@v1.0.0
+        
+      - name: debug folders
+        run: |
+          ls -alR ${{ env.HOME }}
+          ls -alR /github/home
+          ls -alR .
+          
       - name: check for .kube
         id: check_kube
         uses: andstor/file-existence-action@v1
