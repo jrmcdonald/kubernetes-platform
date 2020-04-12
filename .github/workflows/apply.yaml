@@ -68,7 +68,7 @@ jobs:
           BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
           
-      - names: check for kubeconfig
+      - name: check for kubeconfig
         id: check_kube
         uses: andstor/file-existence-action@v1
         with:
