@@ -69,7 +69,10 @@ jobs:
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
         
       - name: debug folders
-        run: ls -al ${{ env.HOME }}/.kube
+        run: |
+          echo $HOME
+          echo ${{ env.HOME }}
+          ls -al $HOME/.kube
           
       - name: check for .kube
         id: check_kube
