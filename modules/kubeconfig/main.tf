@@ -28,7 +28,7 @@ data "local_file" "kubeconfig" {
   filename   = pathexpand("~/.kube/config")
 }
 
-output "kubeconfig" {
-  value     = data.local_file.kubeconfig.content
-  sensitive = true
+resource "local_file" "kubeconfig" {
+  sensitive_content = data.local_file.kubeconfig.content
+  filename          = "${path.root}/.kubeconfig"
 }

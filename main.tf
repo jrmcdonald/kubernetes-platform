@@ -24,5 +24,5 @@ module "provisioning" {
 module "kubeconfig" {
   source = "./modules/kubeconfig"
 
-  cluster_name          = var.domain
+  cluster_name = var.domain
 }
