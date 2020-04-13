@@ -28,10 +28,6 @@ IFS=$'\n\t'
 
 _ME=$(basename "${0}")
 
-_CLUSTER_NAME="qwyck-cloud.co.uk"
-_CLUSTER_IP=$(dig +short kube1.${_CLUSTER_NAME})
-_CLUSTER_PORT=6443
-
 ###############################################################################
 # Help
 ###############################################################################
@@ -39,7 +35,7 @@ _CLUSTER_PORT=6443
 _print_help() {
   cat <<HEREDOC
 Usage:
-  ${_ME}
+  ${_ME} <cluster-name> <api-secure-port>
   ${_ME} -h | --help
 
 Options:
@@ -52,7 +48,11 @@ HEREDOC
 ###############################################################################
 
 _get_config() {
-  [ -d $HOME/.kube/${_CLUSTER_NAME} ] || mkdir -p $HOME/.kube/${_CLUSTER_NAME}
+  local _CLUSTER_NAME=${1:?'<cluster-name> is required'}
+  local _CLUSTER_PORT=${2:?'<api-secure-port> is required'}
+  local _CLUSTER_IP=$(dig +short "kube1.${_CLUSTER_NAME}")
+
+  [[ -d $HOME/.kube/${_CLUSTER_NAME} ]] || mkdir -p $HOME/.kube/${_CLUSTER_NAME}
   
   scp -oStrictHostKeyChecking=no \
     root@${_CLUSTER_IP}:/etc/kubernetes/pki/{apiserver-kubelet-client.key,apiserver-kubelet-client.crt,ca.crt} \
