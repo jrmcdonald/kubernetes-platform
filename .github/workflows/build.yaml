@@ -30,7 +30,7 @@ jobs:
           BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
 
       - name: fmt
-        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        uses: jrmcdonald/terraform-github-actions@v0.2.5
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'fmt'
@@ -38,7 +38,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: init
-        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        uses: jrmcdonald/terraform-github-actions@v0.2.5
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'init'
@@ -47,7 +47,7 @@ jobs:
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
 
       - name: validate
-        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        uses: jrmcdonald/terraform-github-actions@v0.2.5
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'validate'
@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: plan provisioning
-        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        uses: jrmcdonald/terraform-github-actions@v0.2.5
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'plan'
@@ -64,7 +64,7 @@ jobs:
           TF_CLI_ARGS: "-target=module.provisioning -var-file=secrets.tfvars.json"
           
       - name: plan kubeconfig
-        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        uses: jrmcdonald/terraform-github-actions@v0.2.5
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'plan'

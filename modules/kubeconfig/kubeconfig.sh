@@ -47,14 +47,10 @@ HEREDOC
 # Program Functions
 ###############################################################################
 
-_lookup() {
-  python -c 'import socket, sys; print socket.gethostbyname(sys.argv[1])' "$@" 2>/dev/null
-}
-
 _get_config() {
   local _CLUSTER_NAME=${1:?'<cluster-name> is required'}
   local _CLUSTER_PORT=${2:?'<api-secure-port> is required'}
-  local _CLUSTER_IP=$(_lookup "kube1.${_CLUSTER_NAME}")
+  local _CLUSTER_IP=$(dig +short "kube1.${_CLUSTER_NAME}")
   
   [[ -d $HOME/.kube/${_CLUSTER_NAME} ]] || mkdir -p $HOME/.kube/${_CLUSTER_NAME}
   
