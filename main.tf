@@ -9,8 +9,8 @@ terraform {
   }
 }
 
-module "hobby-kube" {
-  source = "github.com/jrmcdonald/provisioning"
+module "provisioning" {
+  source = "github.com/hobby-kube/provisioning"
 
   domain = var.domain
 
@@ -24,6 +24,5 @@ module "hobby-kube" {
 module "kubeconfig" {
   source = "./modules/kubeconfig"
 
-  kubeconfig_depends_on = [module.hobby-kube.kubernetes_overlay_cidr]
   cluster_name          = var.domain
 }

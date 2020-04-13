@@ -48,7 +48,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
-          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+          TF_CLI_ARGS: "-target=module.provisioning -var-file=secrets.tfvars.json"
 
       - name: shred
         uses: jrmcdonald/blackbox-github-actions@v0.2.0
