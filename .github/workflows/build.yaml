@@ -54,7 +54,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: plan
+      - name: plan provisioning
         uses: jrmcdonald/terraform-github-actions@v0.2.2
         with:
           tf_actions_version: ${{ env.tf_version }}
@@ -62,6 +62,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: "-target=module.provisioning -var-file=secrets.tfvars.json"
+          
+      - name: plan kubeconfig
+        uses: jrmcdonald/terraform-github-actions@v0.2.2
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_subcommand: 'plan'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_CLI_ARGS: "-target=module.kubeconfig -var-file=secrets.tfvars.json"
 
       - name: shred
         uses: jrmcdonald/blackbox-github-actions@v0.2.0
