@@ -10,7 +10,7 @@ terraform {
 }
 
 module "hobby-kube" {
-  source = "github.com/hobby-kube/provisioning"
+  source = "github.com/jrmcdonald/provisioning"
 
   domain = "${var.domain}"
 
