@@ -12,11 +12,18 @@ terraform {
 module "hobby-kube" {
   source = "github.com/jrmcdonald/provisioning"
 
-  domain = "${var.domain}"
+  domain = var.domain
 
-  hcloud_token    = "${var.hcloud_token}"
-  hcloud_ssh_keys = "${var.hcloud_ssh_keys}"
+  hcloud_token    = var.hcloud_token
+  hcloud_ssh_keys = var.hcloud_ssh_keys
 
-  cloudflare_email     = "${var.cloudflare_email}"
-  cloudflare_api_token = "${var.cloudflare_api_token}"
+  cloudflare_email     = var.cloudflare_email
+  cloudflare_api_token = var.cloudflare_api_token
+}
+
+module "kubeconfig" {
+  source = "./modules/kubeconfig"
+
+  kubeconfig_depends_on = [module.hobby-kube.kubernetes_overlay_cidr]
+  cluster_name          = var.domain
 }
