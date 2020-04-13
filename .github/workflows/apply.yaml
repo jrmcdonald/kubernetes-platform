@@ -39,16 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
-          
-      - name: destroy
-        uses: jrmcdonald/terraform-github-actions@v0.2.2
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'destroy'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
-          
+
       - name: apply
         uses: jrmcdonald/terraform-github-actions@v0.2.2
         with:
