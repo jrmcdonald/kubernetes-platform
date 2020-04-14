@@ -1,5 +1,5 @@
 variable "kubeconfig_path" {
-  type string
+  type = string
 }
 
 provider "helm" {
