@@ -3,14 +3,12 @@ variable "kubeconfig_path" {
 }
 
 provider "helm" {
-  debug = true
-  
   kubernetes {
     config_path = var.kubeconfig_path
   }
 }
 
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
+data "helm_repository" "nginx-stable" {
+  name = "nginx-stable"
+  url  = "https://helm.nginx.com/stable"
 }
