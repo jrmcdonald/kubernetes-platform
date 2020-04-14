@@ -1,6 +1,9 @@
 # IDEs
 .idea
 
+# kube config
+.kubeconfig
+
 # blackbox files
 /.blackbox/private-keys-v1.d/
 /.blackbox/pubring.gpg~
