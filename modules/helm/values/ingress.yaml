@@ -1,4 +1,6 @@
 controller:
+  service:
+    type: ingress
   config:
     enable-vts-status: 'true'
   tolerations:

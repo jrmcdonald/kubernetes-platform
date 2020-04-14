@@ -11,6 +11,8 @@ resource "helm_release" "ingress" {
   version    = "0.4.3"
   namespace  = kubernetes_namespace.ingress.metadata[0].name
 
+  cleanup_on_fail = true
+
   values = [
     file("${path.module}/values/ingress.yaml")
   ]
