@@ -3,6 +3,8 @@ variable "kubeconfig_path" {
 }
 
 provider "helm" {
+  debug = true
+  
   kubernetes {
     config_path = var.kubeconfig_path
   }
