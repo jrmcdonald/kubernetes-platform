@@ -59,6 +59,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
           TF_CLI_ARGS: "-target=module.kubeconfig -var-file=secrets.tfvars.json"
+          
+      - name: apply helm
+        uses: jrmcdonald/terraform-github-actions@v0.2.5
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_subcommand: 'apply'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
+          TF_CLI_ARGS: "-target=module.helm -var-file=secrets.tfvars.json"
 
       - name: shred
         uses: jrmcdonald/blackbox-github-actions@v0.2.0

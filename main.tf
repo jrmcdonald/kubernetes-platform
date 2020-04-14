@@ -26,3 +26,9 @@ module "kubeconfig" {
 
   cluster_name = var.domain
 }
+
+module "helm" {
+  source = "./modules/helm"
+
+  kubeconfig_path = "${path.root}/.kubeconfig"
+}
