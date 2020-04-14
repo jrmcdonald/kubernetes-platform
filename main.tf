@@ -21,10 +21,14 @@ module "provisioning" {
   cloudflare_api_token = var.cloudflare_api_token
 }
 
-module "ingress" {
-  source = "./modules/ingress"
 module "kubeconfig" {
   source = "./modules/kubeconfig"
 
   cluster_name = var.domain
+}
+
+module "helm" {
+  source = "./modules/helm"
+  
+  kubeconfig_path = "${path.root}/.kubeconfig"
 }
