@@ -29,6 +29,6 @@ module "kubeconfig" {
 
 module "helm" {
   source = "./modules/helm"
-  
+
   kubeconfig_path = "${path.root}/.kubeconfig"
 }
