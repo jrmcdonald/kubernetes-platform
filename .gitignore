@@ -4,13 +4,6 @@
 # kube config
 .kubeconfig
 
-# blackbox files
-/.blackbox/private-keys-v1.d/
-/.blackbox/pubring.gpg~
-/.blackbox/pubring.kbx~
-/.blackbox/secring.gpg
-secrets.tfvars.json
-
 # Local .terraform directories
 **/.terraform/*
 
@@ -30,3 +23,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore ansible files
+*.retry
+**/production

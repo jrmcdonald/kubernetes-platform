@@ -1,0 +1,5 @@
+- terraform:
+    project_path: '{{ playbook_dir }}/terraform/'
+    variables: { inventory_path: '{{ playbook_dir }}', hcloud_token: '{{ hcloud_token }}', cloudflare_api_token: '{{ cloudflare_api_token }}' }
+    force_init: true
+    state: '{{ state }}'
