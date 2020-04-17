@@ -2,34 +2,30 @@
 
 ## Overview
 
-A set of Terraform scripts to manage and deploy a Kubernetes platform to [Hetzner Cloud](https://www.hetzner.com/cloud).
+A set of Ansible & Terraform scripts to manage and deploy a Kubernetes platform to [Hetzner Cloud](https://www.hetzner.com/cloud).
 
 ## Requirements
 
-* The requirements listed at [hobby-kube/provisioning](https://github.com/hobby-kube/provisioning)
+* [Terraform](https://www.terraform.io/)
+* [Ansible](https://www.ansible.com/)
 * [GnuPG](https://gnupg.org/)
-* [blackbox](https://github.com/StackExchange/blackbox)
-* [Helm](https://helm.sh/)
 
 ## Manual execution
 
-*Note:* you must be an admin in blackbox to decrypt the secrets file.
+*Note:* you must be keyed to the `.vault-pass` file to execute the `terraform.yaml` playbook.
 
 From the project root:
 
 ```shell script
-# decrypt the secrets file
-blackbox_decrypt_all_files
+# setup cloud infrastructure
+ansible-playbook -i localhost terraform.yaml
 
-# fetch the required modules
-terraform init
+# bootstrap nodes & configure kubernetes
+ansible-playbook -i localhost site.yaml
+```
 
-# see what `terraform apply` will do
-terraform plan --var-file=secrets.tfvars.json
+To tear down the project:
 
-# execute it
-terraform apply --var-file=secrets.tfvars.json
-
-# shred all secrets
-blackbox_shred_all_files
+```shell script
+ansible-playbook -i localhost terraform.yaml --extra-vars "state=absent"
 ```

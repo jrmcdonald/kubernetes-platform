@@ -1,0 +1,7 @@
+- name: Remove existing known_hosts file for each ssh_host
+  shell: "ssh-keygen -R {{ hostvars[item].ansible_host }}"
+  with_items: "{{ ssh_hosts }}"
+
+- name: Update known_hosts file for each ssh_host
+  shell: "ssh-keyscan -H {{ hostvars[item].ansible_host }} >> {{ ssh_known_hosts_file }}"
+  with_items: "{{ ssh_hosts }}"

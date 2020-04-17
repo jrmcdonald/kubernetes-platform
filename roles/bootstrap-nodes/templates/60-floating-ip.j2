@@ -1,0 +1,4 @@
+auto eth0:1
+iface eth0:1 inet static
+address {{ groups['loadbalancer'][0] }}
+netmask 32

@@ -1,0 +1,24 @@
+- name: Configure network interfaces
+  block:
+    - name: Configure a floating ip address for the loadbalancer
+      template:
+        src: ../templates/60-floating-ip.j2
+        dest: /etc/network/interfaces.d/60-floating-ip.cfg
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart networking
+
+- name: Configure UFW
+  block:
+    - name: Allow traffic on port
+      ufw: rule=allow port={{ item }} proto=tcp
+      with_items:
+        - ssh
+        - http
+        - https
+        - '6443' # kubernetes secure remote API
+
+    - name: Enable UFW with default deny
+      ufw: state=enabled default=deny
