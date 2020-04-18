@@ -1,4 +1,4 @@
-# Kubernetes Platform Setup ![build](https://github.com/jrmcdonald/terraform-platform/workflows/build/badge.svg)
+# Kubernetes Platform Setup ![build](https://github.com/jrmcdonald/kubernetes-platform/workflows/build/badge.svg)
 
 ## Overview
 

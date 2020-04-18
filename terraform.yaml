@@ -1,3 +1,9 @@
+- name: Build Terraform State Store
+  hosts: localhost
+  connection: local
+  roles:
+    - role: aws
+
 - name: Execute Terraform
   hosts: localhost
   connection: local

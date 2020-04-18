@@ -1,0 +1,34 @@
+- name: Create terraform state bucket
+  s3_bucket:
+    name: '{{ state_bucket }}'
+    state: present
+    region: '{{ region }}'
+    encryption: AES256
+    versioning: true
+
+- name: Check public access block status
+  command: aws s3api get-public-access-block --bucket '{{ state_bucket }}'
+  register: check_public_block_cmd
+  changed_when: false
+  failed_when: false
+
+- name: Block public access to bucket
+  command: aws s3api put-public-access-block --bucket '{{ state_bucket }}' --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+  when: check_public_block_cmd.rc != 0
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Create terraform lock table
+  include_role:
+    name: sansible.aws_dynamo_db
+  vars:
+    sansible_aws_dynamo_db_attribute_definitions:
+      - name: 'LockID'
+        type: 'S'
+    sansible_aws_dynamo_db_key_schema:
+      - name: 'LockID'
+        key_type: 'HASH'
+    sansible_aws_dynamo_db_region: eu-west-1
+    sansible_aws_dynamo_db_stack_name: '{{ state_table }}'
+    sansible_aws_dynamo_db_table_name: '{{ state_table }}'
+    sansible_aws_dynamo_db_tags:
+      name: '{{ state_table }}'
