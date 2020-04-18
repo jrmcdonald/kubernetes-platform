@@ -1,0 +1,4 @@
+- name: dev-sec.os-hardening
+- name: dev-sec.ssh-hardening
+- name: sansible.aws_dynamo_db
+  version: v3.0.1

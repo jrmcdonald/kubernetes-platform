@@ -17,6 +17,9 @@ A set of Ansible & Terraform scripts to manage and deploy a Kubernetes platform 
 From the project root:
 
 ```shell script
+# install roles
+ansible-galaxy install -r requirements.yaml
+
 # setup cloud infrastructure
 ansible-playbook -i localhost terraform.yaml
 
