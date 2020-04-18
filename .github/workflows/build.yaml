@@ -1,19 +1,16 @@
 name: build
 
 on:
+  - push
   - pull_request
 
-env:
-  tf_version: 'latest'
-
 jobs:
-  build:
-
+  lint:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@master
-      
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -21,71 +18,54 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
-      - name: postdeploy
-        uses: jrmcdonald/blackbox-github-actions@v0.2.0
+      - name: Ansible Lint
+        uses: ansible/ansible-lint-action@6c8c141
         with:
-          bb_actions_subcommand: 'postdeploy'
-        env:
-          BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
-          BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
+          targets: |
+            site.yaml
+            terraform.yaml
+            kubernetes.yaml
+            roles/
 
-      - name: fmt
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
+      - name: Terraform Format
+        uses: hashicorp/terraform-github-actions@1acd6aa
         with:
-          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_version: 'latest'
           tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: './terraform/'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: init
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+  build:
+    runs-on: ununtu-latest
+    if: contains(github.ref, "master") && contains(github.event_name, "push")
 
-      - name: validate
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'validate'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@master
 
-      - name: plan provisioning
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
+      - name: Setup GPG
+        run: bin/gpg-import.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "-target=module.provisioning -var-file=secrets.tfvars.json"
-          
-      - name: plan kubeconfig
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "-target=module.kubeconfig -var-file=secrets.tfvars.json"
+          GPG_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
+          GPG_PRIVKEY: ${{ secrets.CI_GPG_PRIVKEY }}
 
-      - name: plan helm
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
+      - name: Setup SSH
+        run: bin/ssh-import.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "-target=module.helm -var-file=secrets.tfvars.json"
+          SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
 
-      - name: shred
-        uses: jrmcdonald/blackbox-github-actions@v0.2.0
-        if: always()
-        with:
-          bb_actions_subcommand: 'shred_all_files'
-        env:
-          BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
-          BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
+      - name: Install Ansible Roles
+        run: |
+          ansible-galaxy install -r requirements.yaml
+
+      - name: Ansible Check - terraform.yaml
+        run: ansible-playbook -i localhost terraform.yaml --check
+
+      - name: Ansible Run - terraform.yaml
+        run: ansible-playbook -i localhost terraform.yaml
+
+      - name: Ansible Check - site.yaml
+        run: ansible-playbook -i localhost site.yaml --check
+
+      - name: Ansible Run - site.yaml
+        run: ansible-playbook -i localhost site.yaml
