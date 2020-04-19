@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Ansible Lint
-        uses: ansible/ansible-lint-action@6c8c141
+        uses: jrmcdonald/ansible-lint-action@master
         with:
           targets: |
             site.yaml
