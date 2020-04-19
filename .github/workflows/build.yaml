@@ -11,14 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Install ansible-lint
+        run: python -m pip install --upgrade pip ansible-lint
+
       - name: Ansible Lint
         uses: jrmcdonald/ansible-lint-action@master
         with:
           targets: |
             site.yaml
             terraform.yaml
-            kubernetes.yaml
-            roles/
 
       - name: Terraform Format
         uses: hashicorp/terraform-github-actions@1acd6aa
