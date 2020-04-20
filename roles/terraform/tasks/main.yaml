@@ -1,4 +1,5 @@
-- terraform:
+- name: Execute Terraform
+  terraform:
     force_init: true
     backend_config:
       region: '{{ region }}'

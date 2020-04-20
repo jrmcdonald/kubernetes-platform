@@ -1,2 +1,3 @@
+ssh_known_hosts_command: "ssh-keyscan -H -T 10"
 ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
-ssh_hosts: "{{ groups['all_kube_nodes'] }}"
+ssh_known_hosts: "{{ groups['all_kube_nodes'] }}"

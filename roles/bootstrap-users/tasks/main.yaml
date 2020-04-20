@@ -1,4 +1,10 @@
 - include_tasks: user.yaml
   loop:
-    - { name: 'deployer', groups: 'wheel', public_keys_file: '../files/deployer.keys', password: '$6$k34ihAZFJ66C7BmC$qLHAizbPBfVKziYBOTiZkQ6jkVwZiWNqf2GAnupWWC6Ggi.y.ALR4fr.FgVFtaIDZqM.XGXuXbUgJ/CJoOhTH/' }
-    - { name: 'admin', groups: 'sudo', public_keys_file: '../files/admin.keys', password: '$6$k34ihAZFJ66C7BmC$tYKG.Rkv/.Vj.UIKjXUNGp4dJb8VBBoIcr9qsbLS65AdG0K5YgkWYgumq5J2x4nFpuTepwWgnzc4j7tCXs7Ri1' }
+    - name: 'deployer'
+      groups: 'wheel'
+      public_keys_file: '../files/deployer.keys'
+      password: '$6$k34ihAZFJ66C7BmC$qLHAizbPBfVKziYBOTiZkQ6jkVwZiWNqf2GAnupWWC6Ggi.y.ALR4fr.FgVFtaIDZqM.XGXuXbUgJ/CJoOhTH/'
+    - name: 'admin'
+      groups: 'sudo'
+      public_keys_file: '../files/admin.keys'
+      password: '$6$k34ihAZFJ66C7BmC$tYKG.Rkv/.Vj.UIKjXUNGp4dJb8VBBoIcr9qsbLS65AdG0K5YgkWYgumq5J2x4nFpuTepwWgnzc4j7tCXs7Ri1'

@@ -2,7 +2,7 @@
   block:
     - name: Configure a floating ip address for the loadbalancer
       template:
-        src: ../templates/60-floating-ip.j2
+        src: templates/60-floating-ip.j2
         dest: /etc/network/interfaces.d/60-floating-ip.cfg
         owner: root
         group: root
