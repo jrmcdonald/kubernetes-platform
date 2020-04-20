@@ -1,18 +1,12 @@
 - name: Make sure the known hosts file exists
   file: "path={{ ssh_known_hosts_file }} state=touch"
 
-- name: Check if key exists in known_hosts
-  command: "ssh-keygen -f {{ ssh_known_hosts_file }} -F {{ hostvars[item].ansible_host }}"
-  with_items: ssh_known_hosts
-  register: ssh_known_host_results
-  ignore_errors: yes
-  
 - name: Remove existing known_hosts entries
   command: "ssh-keygen -f {{ ssh_known_hosts_file }} -R {{ hostvars[item].ansible_host }}"
-  with_items: "{{ ssh_known_host_results.results }}"
-  when: item.stdout != ""
+  with_items: "{{ ssh_known_hosts }}"
+  changed_when: false
 
 - name: Scan the public keys for all hosts
   shell: "{{ ssh_known_hosts_command }} {{ hostvars[item].ansible_host }} >> {{ ssh_known_hosts_file }}"
-  with_items: ssh_known_hosts
+  with_items: "{{ ssh_known_hosts }}"
   changed_when: false

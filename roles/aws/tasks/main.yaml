@@ -13,7 +13,7 @@
   failed_when: false
 
 - name: Block public access to bucket
-  command: 
+  command:
     argv:
       - aws s3api put-public-access-block
       - --bucket '{{ state_bucket }}'
