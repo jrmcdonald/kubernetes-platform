@@ -1,15 +1,36 @@
 name: build
 
-on:
-  - pull_request
-
-env:
-  tf_version: 'latest'
+on: [push, pull_request]
 
 jobs:
-  build:
-
+  lint:
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Ansible Lint
+        uses: jrmcdonald/ansible-lint-action@master
+        with:
+          targets: |
+            site.yaml
+            terraform.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform Format
+        uses: hashicorp/terraform-github-actions@1acd6aa
+        with:
+          tf_actions_version: 'latest'
+          tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: './terraform/'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ununtu-latest
+    needs: lint
+    if: contains(github.ref, 'master') && contains(github.event_name, 'push')
 
     steps:
       - uses: actions/checkout@master
@@ -21,71 +42,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
-      - name: postdeploy
-        uses: jrmcdonald/blackbox-github-actions@v0.2.0
-        with:
-          bb_actions_subcommand: 'postdeploy'
+      - name: Setup GPG
+        run: bin/gpg-import.sh
         env:
-          BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
-          BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
+          GPG_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
+          GPG_PRIVKEY: ${{ secrets.CI_GPG_PRIVKEY }}
 
-      - name: fmt
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'fmt'
+      - name: Setup SSH
+        run: bin/ssh-import.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
 
-      - name: init
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "--var-file=secrets.tfvars.json"
+      - name: Install Ansible Roles
+        run: |
+          ansible-galaxy install -r requirements.yaml
 
-      - name: validate
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'validate'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Ansible Run - terraform.yaml
+        run: ansible-playbook -i localhost terraform.yaml
 
-      - name: plan provisioning
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "-target=module.provisioning -var-file=secrets.tfvars.json"
-          
-      - name: plan kubeconfig
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "-target=module.kubeconfig -var-file=secrets.tfvars.json"
-
-      - name: plan helm
-        uses: jrmcdonald/terraform-github-actions@v0.2.5
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'plan'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: "-target=module.helm -var-file=secrets.tfvars.json"
-
-      - name: shred
-        uses: jrmcdonald/blackbox-github-actions@v0.2.0
-        if: always()
-        with:
-          bb_actions_subcommand: 'shred_all_files'
-        env:
-          BLACKBOX_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
-          BLACKBOX_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
+      - name: Ansible Run - site.yaml
+        run: ansible-playbook -i localhost site.yaml

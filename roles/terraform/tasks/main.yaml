@@ -1,0 +1,10 @@
+- name: Execute Terraform
+  terraform:
+    force_init: true
+    backend_config:
+      region: '{{ region }}'
+      bucket: '{{ state_bucket }}'
+      dynamodb_table: '{{ state_table }}'
+    project_path: '{{ playbook_dir }}/terraform/'
+    state: '{{ state }}'
+    variables: { inventory_path: '{{ playbook_dir }}', hcloud_token: '{{ hcloud_token }}', cloudflare_api_token: '{{ cloudflare_api_token }}' }
