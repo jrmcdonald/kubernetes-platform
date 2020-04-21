@@ -57,14 +57,8 @@ jobs:
         run: |
           ansible-galaxy install -r requirements.yaml
 
-      - name: Ansible Check - terraform.yaml
-        run: ansible-playbook -i localhost terraform.yaml --check
-
       - name: Ansible Run - terraform.yaml
         run: ansible-playbook -i localhost terraform.yaml
-
-      - name: Ansible Check - site.yaml
-        run: ansible-playbook -i localhost site.yaml --check
 
       - name: Ansible Run - site.yaml
         run: ansible-playbook -i localhost site.yaml
