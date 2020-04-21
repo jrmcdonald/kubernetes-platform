@@ -19,7 +19,7 @@
       - --bucket '{{ state_bucket }}'
       - --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
   when: check_public_block_cmd.rc != 0
-  ignore_errors: '{{ ansible_check_mode }}'
+  check_mode: no
 
 - name: Create terraform lock table
   include_role:

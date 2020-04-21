@@ -5,8 +5,10 @@
   command: "ssh-keygen -f {{ ssh_known_hosts_file }} -R {{ hostvars[item].ansible_host }}"
   with_items: "{{ ssh_known_hosts }}"
   changed_when: false
+  check_mode: no
 
 - name: Scan the public keys for all hosts
   shell: "{{ ssh_known_hosts_command }} {{ hostvars[item].ansible_host }} >> {{ ssh_known_hosts_file }}"
   with_items: "{{ ssh_known_hosts }}"
   changed_when: false
+  check_mode: no
