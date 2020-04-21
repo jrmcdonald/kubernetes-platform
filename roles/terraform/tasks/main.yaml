@@ -8,3 +8,8 @@
     project_path: '{{ playbook_dir }}/terraform/'
     state: '{{ state }}'
     variables: { inventory_path: '{{ playbook_dir }}', hcloud_token: '{{ hcloud_token }}', cloudflare_api_token: '{{ cloudflare_api_token }}' }
+  register: terraform_result
+
+- name: Store Terraform Output
+  copy: "content={{ terraform_result.stdout }} dest={{ playbook_dir }}/terraform.stdout"
+  delegate_to: localhost
