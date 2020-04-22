@@ -4,6 +4,7 @@
   register: check_user_cmd
   changed_when: false
   failed_when: false
+  check_mode: no
 
 - name: Setup {{ item.name }} user
   block:
@@ -22,9 +23,10 @@
 
     - name: Create {{ item.name }} user
       user: name={{ item.name }} groups={{ item.groups }} append=yes state=present createhome=yes shell=/bin/bash password={{ item.password }}
+      register: new_user
 
     - name: Add authorized keys
-      authorized_key: user={{ item.name }} key="{{ lookup('file', item.public_keys_file) }}" exclusive=true
+      authorized_key: user={{ item.name }} key="{{ lookup('file', item.public_keys_file) }}" path="{{ new_user.home }}/.ssh/authorized_keys" exclusive=true
 
   when: check_user_cmd.rc != 0
   ignore_errors: '{{ ansible_check_mode }}'
