@@ -22,3 +22,11 @@
 
     - name: Enable UFW with default deny
       ufw: state=enabled default=deny
+
+- name: Install 3mux
+  include_role:
+    name: fubarhouse.golang
+  vars:
+    go_get:
+      - name: 3mux
+        url: github.com/aaronjanse/3mux
