@@ -1,9 +1,18 @@
+- name: Check if known hosts dir exists
+  stat: "path={{ ssh_known_hosts_dir }}"
+  register: ssh_known_hosts_dir_exists
+
 - name: Make sure the known hosts dir exists
-  file: "path={{ ssh_known_hosts_dir }} state=directory"
-  delegate_to: localhost
+  file:
+    path: "{{ ssh_known_hosts_dir }}"
+    state: directory
+  when: not ssh_known_hosts_dir_exists.stat.exists
 
 - name: Make sure the known hosts file exists
-  file: "path={{ ssh_known_hosts_file }} state=touch"
+  copy:
+    content: ""
+    dest: "{{ ssh_known_hosts_file }}"
+    force: no
 
 - name: Remove existing known_hosts entries
   command: "ssh-keygen -f {{ ssh_known_hosts_file }} -R {{ hostvars[item].ansible_host }}"
