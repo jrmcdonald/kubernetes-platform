@@ -24,6 +24,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Ignore output
+terraform.stdout
+
 # Ignore ansible files
 *.retry
 **/production
