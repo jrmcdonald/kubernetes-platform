@@ -2,10 +2,10 @@
   hosts: localhost
   connection: local
   roles:
-    - role: aws
+    - bootstrap-terraform-state
 
 - name: Execute Terraform
   hosts: localhost
   connection: local
   roles:
-    - terraform
+    - bootstrap-terraform
