@@ -13,3 +13,9 @@
 - name: Store Terraform Output
   copy: "content={{ terraform_result.stdout }} dest={{ playbook_dir }}/terraform.stdout"
   delegate_to: localhost
+
+- name: Remove Generated Inventory
+  file:
+    path: "{{ playbook_dir }}/production"
+    state: absent
+  when: state == "absent"
