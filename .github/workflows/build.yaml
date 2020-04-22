@@ -91,7 +91,6 @@ jobs:
           path: production
 
       - name: Ansible Run - site.yaml
-        run: ansible-playbook -i production site.yaml -vvv
+        run: ansible-playbook -i production site.yaml
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
-          ANSIBLE_HOST_KEY_CHECKING: false

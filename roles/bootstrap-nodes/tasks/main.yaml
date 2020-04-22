@@ -22,3 +22,7 @@
 
     - name: Enable UFW with default deny
       ufw: state=enabled default=deny
+
+- name: Install tmux
+  apt:
+    name: tmux
