@@ -1,14 +1,11 @@
 %{ for host in master_hostnames ~}
-${host} ansible_host=${master_public_ips[host]} ip=${master_private_ips[host]}
+${host} ansible_host=${master_public_ips[host]} ip=${master_private_ips[host]} loadbalancer_ip=${loadbalancer_ip}
 %{ endfor ~}
 %{ for host in worker_hostnames ~}
-${host} ansible_host=${worker_public_ips[host]} ip=${worker_private_ips[host]}
+${host} ansible_host=${worker_public_ips[host]} ip=${worker_private_ips[host]} loadbalancer_ip=${loadbalancer_ip}
 %{ endfor ~}
 
-[loadbalancer]
-${loadbalancer_ip}
-
-[all_kube_nodes]
+[all]
 %{ for host in master_hostnames ~}
 ${host}
 %{ endfor ~}
