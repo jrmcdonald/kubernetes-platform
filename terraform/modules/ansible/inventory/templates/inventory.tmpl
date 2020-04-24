@@ -13,7 +13,7 @@ ${host}
 ${host}
 %{ endfor ~}
 
-[kube_master]
+[kube-master]
 %{ for host in master_hostnames ~}
 ${host}
 %{ endfor ~}
@@ -26,11 +26,11 @@ ${host}
 ${host}
 %{ endfor ~}
 
-[kube_node]
+[kube-node]
 %{ for host in worker_hostnames ~}
 ${host}
 %{ endfor ~}
 
 [k8s-cluster:children]
-kube_node
-kube_master
+kube-node
+kube-master
