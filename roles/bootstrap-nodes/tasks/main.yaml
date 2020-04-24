@@ -10,15 +10,49 @@
         backup: yes
       notify: restart networking
 
+# see issue below for source of etcd ports
+# https://github.com/kubernetes-sigs/kubespray/issues/2767#issuecomment-497081910
 - name: Configure UFW
   block:
-    - name: Allow traffic on port
+    - name: Allow traffic on tcp port
       ufw: rule=allow port={{ item }} proto=tcp
       with_items:
         - ssh
         - http
         - https
+        - '2379'
+        - '2380'
         - '6443' # kubernetes secure remote API
+        - '6783' # weave
+        - '6443' # kubernetes secure remote API
+        - '10251' # etcd
+        - '10252' # etcd
+        - '10250' # etcd
+        - '10255' # etcd
+
+    - name: Allow traffic on udp port
+      ufw: rule=allow port={{ item }} proto=udp
+      with_items:
+        - '6783' # weave
+        - '6784' # weave
+
+    - name: Allow etcd ports on master nodes
+      ufw: rule=allow port={{ item }} proto=tcp
+      when: "'kube-master' in group_names"
+      with_items:
+      - '2379'
+      - '2380'
+      - '10251'
+      - '10252'
+
+    - name: Allow etcd ports on nodes
+      ufw: rule=allow from_port=30000 to_port=32767 proto=tcp
+
+    - name: Allow from kubernetes subnets
+      ufw: rule=allow from_ip={{ item }} proto=tcp
+      with_items:
+        - '10.233.0.0/18' # kube_service_addresses
+        - '10.233.64.0/18' # kube_pods_subnet
 
     - name: Enable UFW with default deny
       ufw: state=enabled default=deny
