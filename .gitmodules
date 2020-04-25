@@ -1,4 +1,4 @@
 [submodule "kubespray"]
 	path = kubespray
-	url = git@github.com:jrmcdonald/kubespray
+	url = https://github.com/jrmcdonald/kubespray
 	branch = work
