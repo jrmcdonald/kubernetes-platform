@@ -2,7 +2,7 @@
   become: true
   remote_user: deployer
   import_playbook: kubespray/cluster.yml
-  
+
 - name: Install Metallb
   become: true
   remote_user: deployer
