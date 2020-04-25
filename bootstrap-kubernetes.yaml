@@ -2,3 +2,11 @@
   become: true
   remote_user: deployer
   import_playbook: kubespray/cluster.yml
+  
+- name: Install Metallb
+  become: true
+  remote_user: deployer
+  import_playbook: kubespray/contrib/metallb/metallb.yml
+  vars:
+    metallb:
+      ip_range: "{{ hostvars[groups['kube-master'][0]]['loadbalancer_ip'] }}"
