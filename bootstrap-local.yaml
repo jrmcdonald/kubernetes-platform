@@ -1,0 +1,7 @@
+- name: Bootstrap Local Settings
+  hosts: localhost
+  connection: local
+  become: no
+  roles:
+    - bootstrap-local
+  tags: local

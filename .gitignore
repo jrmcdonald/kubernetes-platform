@@ -30,3 +30,7 @@ terraform.stdout
 # Ignore ansible files
 *.retry
 **/production
+
+# Ignore Kubespray Outputs
+**/credentials/
+**/artifacts/

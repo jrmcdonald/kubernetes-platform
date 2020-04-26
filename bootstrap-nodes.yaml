@@ -1,5 +1,13 @@
+- name: Bootstrap Required Users
+  hosts: all
+  remote_user: root
+  become: no
+  gather_facts: no
+  roles:
+    - bootstrap-users
+
 - name: Harden Kubernetes Nodes
-  hosts: all_kube_nodes
+  hosts: all
   remote_user: deployer
   become: true
   roles:
@@ -10,7 +18,7 @@
       net.ipv6.conf.all.disable_ipv6: 0
 
 - name: Bootstrap Kubernetes Nodes
-  hosts: all_kube_nodes
+  hosts: all
   remote_user: deployer
   become: true
   roles:
