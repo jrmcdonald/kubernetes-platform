@@ -51,13 +51,13 @@ jobs:
           aws-region: eu-west-1
 
       - name: Setup GPG
-        run: bash bin/gpg-import.sh
+        run: bash .ci-scripts/gpg-import.sh
         env:
           GPG_PUBKEY: ${{ secrets.CI_GPG_PUBKEY }}
           GPG_PRIVKEY: ${{ secrets.CI_GPG_SUBKEY }}
 
       - name: Setup SSH
-        run: source bin/ssh-import.sh
+        run: source .ci-scripts/ssh-import.sh
         env:
           SSH_PRIVKEY: ${{ secrets.CI_SSH_PRIVKEY }}
           SSH_AUTH_SOCK_DIR: ${{ env.ssh_sock_dir }}

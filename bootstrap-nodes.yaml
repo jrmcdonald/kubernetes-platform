@@ -1,3 +1,11 @@
+- name: Bootstrap Required Users
+  hosts: all
+  remote_user: root
+  become: no
+  gather_facts: no
+  roles:
+    - bootstrap-users
+
 - name: Harden Kubernetes Nodes
   hosts: all
   remote_user: deployer
