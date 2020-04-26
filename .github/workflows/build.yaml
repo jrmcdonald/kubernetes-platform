@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:    
-      - uses: actions/checkout@master
-        with:
-          submodules: true
-      
       - name: Notify Slack Started
         uses: voxmedia/github-action-slack-notify-build@v1
         id: slack
@@ -23,6 +19,10 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - uses: actions/checkout@master
+        with:
+          submodules: true
 
       - name: Ansible Lint
         uses: jrmcdonald/ansible-lint-action@master
@@ -54,7 +54,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           
       - name: Notify Slack Failed
-        if: failed()
+        if: failure()
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
           message_id: ${{ steps.slack.outputs.message_id }}
@@ -74,10 +74,6 @@ jobs:
       ssh_sock_dir: /tmp/ssh_agent.sock
 
     steps:    
-      - uses: actions/checkout@master
-        with:
-          submodules: true
-
       - name: Notify Slack Started
         uses: voxmedia/github-action-slack-notify-build@v1
         id: slack
@@ -87,6 +83,10 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - uses: actions/checkout@master
+        with:
+          submodules: true
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -158,7 +158,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           
       - name: Notify Slack Failed
-        if: failed()
+        if: failure()
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
           message_id: ${{ steps.slack.outputs.message_id }}
