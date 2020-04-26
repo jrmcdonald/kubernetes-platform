@@ -3,10 +3,23 @@ name: build
 on: [push, pull_request]
 
 jobs:
+  env:
+    slack-channel: 'status-ci-cd'
+  
   lint:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Notify Slack Started
+        uses: voxmedia/github-action-slack-notify-build@v1
+        id: slack
+        with:
+          channel: ${{ env.slack-channel }}
+          status: LINT STARTED
+          color: warning
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    
       - uses: actions/checkout@master
         with:
           submodules: true
@@ -28,6 +41,28 @@ jobs:
           tf_actions_working_dir: './terraform/'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Notify Slack Success
+        if: success()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: ${{ env.slack-channel }}
+          status: LINT SUCCESS
+          color: good
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          
+      - name: Notify Slack Failed
+        if: failed()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: ${{ env.slack-channel }}
+          status: LINT FAILED
+          color: danger
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   build:
     runs-on: ubuntu-latest
@@ -39,6 +74,16 @@ jobs:
       ssh_sock_dir: /tmp/ssh_agent.sock
 
     steps:
+      - name: Notify Slack Started
+        uses: voxmedia/github-action-slack-notify-build@v1
+        id: slack
+        with:
+          channel: ${{ env.slack-channel }}
+          status: BUILD STARTED
+          color: warning
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    
       - uses: actions/checkout@master
         with:
           submodules: true
@@ -100,3 +145,25 @@ jobs:
         run: ansible-playbook -i production site.yaml --become
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
+          
+      - name: Notify Slack Success
+        if: success()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: ${{ env.slack-channel }}
+          status: BUILD SUCCESS
+          color: good
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          
+      - name: Notify Slack Failed
+        if: failed()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: ${{ env.slack-channel }}
+          status: BUILD FAILED
+          color: danger
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
