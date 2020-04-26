@@ -2,10 +2,10 @@ name: build
 
 on: [push, pull_request]
 
+env:
+  slack-channel: 'status-ci-cd'
+
 jobs:
-  env:
-    slack-channel: 'status-ci-cd'
-  
   lint:
     runs-on: ubuntu-latest
 
