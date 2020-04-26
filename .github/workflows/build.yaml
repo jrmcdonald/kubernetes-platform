@@ -9,7 +9,11 @@ jobs:
   lint:
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+      
       - name: Notify Slack Started
         uses: voxmedia/github-action-slack-notify-build@v1
         id: slack
@@ -19,10 +23,6 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-    
-      - uses: actions/checkout@master
-        with:
-          submodules: true
 
       - name: Ansible Lint
         uses: jrmcdonald/ansible-lint-action@master
@@ -73,7 +73,11 @@ jobs:
     env:
       ssh_sock_dir: /tmp/ssh_agent.sock
 
-    steps:
+    steps:    
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
       - name: Notify Slack Started
         uses: voxmedia/github-action-slack-notify-build@v1
         id: slack
@@ -83,10 +87,6 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-    
-      - uses: actions/checkout@master
-        with:
-          submodules: true
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
