@@ -133,18 +133,18 @@ jobs:
         with:
           name: terraform.stdout
           path: terraform.stdout
-          
+
       - name: Upload Ansible Inventory
         uses: actions/upload-artifact@v1
         with:
           name: production
           path: production
 
-      - name: Ansible Run - site.yaml
-        run: ansible-playbook -i production site.yaml --become
+      - name: Ansible Run - kubernetes.yaml
+        run: ansible-playbook -i production kubernetes.yaml --become
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
-          
+
       - name: Notify Slack Success
         if: success()
         uses: voxmedia/github-action-slack-notify-build@v1
