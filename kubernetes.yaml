@@ -36,3 +36,12 @@
   remote_user: deployer
   import_playbook: kubespray/cluster.yml
   tags: kubespray
+
+- name: Download Kubectl Config
+  hosts: kube-master
+  remote_user: deployer
+  become: true
+  gather_facts: false
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  roles:
+    - { role: local/kube-config, tags: local }
