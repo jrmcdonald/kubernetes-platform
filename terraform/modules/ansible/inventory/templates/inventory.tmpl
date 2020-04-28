@@ -1,8 +1,8 @@
 %{ for host in master_hostnames ~}
-${host} ansible_host=${master_public_ips[host]} ip=${master_private_ips[host]} loadbalancer_ip=${loadbalancer_ip}
+${host} ansible_host=${master_public_ips[host]} ip=${master_private_ips[host]}
 %{ endfor ~}
 %{ for host in worker_hostnames ~}
-${host} ansible_host=${worker_public_ips[host]} ip=${worker_private_ips[host]} loadbalancer_ip=${loadbalancer_ip}
+${host} ansible_host=${worker_public_ips[host]} ip=${worker_private_ips[host]}
 %{ endfor ~}
 
 [all]

@@ -33,12 +33,18 @@ module "dns" {
 module "inventory" {
   source = "./modules/ansible/inventory"
 
-  inventory_path     = var.inventory_path
-  loadbalancer_ip    = module.provider.loadbalancer_ip
-  master_hostnames   = module.provider.master_hostnames
+  inventory_path = var.inventory_path
+  master_hostnames = module.provider.master_hostnames
   master_private_ips = module.provider.master_private_ips
-  master_public_ips  = module.provider.master_public_ips
-  worker_hostnames   = module.provider.worker_hostnames
+  master_public_ips = module.provider.master_public_ips
+  worker_hostnames = module.provider.worker_hostnames
   worker_private_ips = module.provider.worker_private_ips
-  worker_public_ips  = module.provider.worker_public_ips
+  worker_public_ips = module.provider.worker_public_ips
+}
+
+module "group_vars" {
+  source = "./modules/ansible/group_vars"
+
+  group_vars_path = var.group_vars_path
+  loadbalancer_ip = module.provider.loadbalancer_ip
 }
