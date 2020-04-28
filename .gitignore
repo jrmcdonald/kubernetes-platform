@@ -26,11 +26,12 @@ terraform.rc
 
 # Ignore Terraform Output
 terraform.stdout
-**/terraform-outputs.yaml
 
 # Ignore Ansible Files
 *.retry
 **/production
+**/outputs/
+**/terraform-outputs.yaml
 **/outputs/
 
 # Ignore Kubespray Outputs

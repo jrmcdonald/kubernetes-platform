@@ -1,0 +1,61 @@
+- name: Configure Local Settings
+  hosts: localhost
+  connection: local
+  become: no
+  roles:
+    - { role: local/known-hosts, tags: local }
+
+- name: Bootstrap Required Users
+  hosts: all
+  remote_user: root
+  become: no
+  gather_facts: no
+  roles:
+    - { role: bootstrap/users, tags: users }
+
+- name: Harden Kubernetes Nodes
+  hosts: all
+  remote_user: deployer
+  become: true
+  roles:
+    - { role: dev-sec.os-hardening, tags: hardening }
+    - { role: dev-sec.ssh-hardening, tags: hardening }
+  vars:
+    sysctl_overwrite:
+      net.ipv6.conf.all.disable_ipv6: 0
+
+- name: Bootstrap Kubernetes Nodes
+  hosts: all
+  remote_user: deployer
+  become: true
+  roles:
+    - { role: bootstrap/nodes, tags: nodes }
+
+- name: Install Kubernetes
+  become: true
+  remote_user: deployer
+  import_playbook: kubespray/cluster.yml
+  tags: kubespray
+
+- name: Download Kubectl Config
+  hosts: kube-master
+  remote_user: deployer
+  become: true
+  gather_facts: false
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  roles:
+    - { role: local/kube-config, tags: local }
+
+- name: Install Kubernetes Apps
+  hosts: localhost
+  connection: local
+  become: no
+  roles:
+    - { role: kubernetes/apps/metallb, tags: apps }
+    - { role: kubernetes/apps/ingress-nginx, tags: apps }
+    - { role: kubernetes/apps/cert-manager, tags: apps }
+  tasks:
+    - name: Execute Install Script
+      command: "bash {{ playbook_dir }}/scripts/install_kubernetes_apps.sh"
+      changed_when: false
+      tags: apps

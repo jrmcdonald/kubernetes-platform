@@ -1,4 +1,0 @@
-- name: Bootstrap Kubespray
-  become: true
-  remote_user: deployer
-  import_playbook: kubespray/cluster.yml

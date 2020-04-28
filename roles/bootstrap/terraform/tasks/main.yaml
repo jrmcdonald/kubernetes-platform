@@ -9,6 +9,7 @@
     state: '{{ state }}'
     variables: {
       inventory_path: '{{ playbook_dir }}',
+      group_vars_path: '{{ playbook_dir }}/group_vars/all/',
       hcloud_token: '{{ hcloud_token }}',
       cloudflare_api_token: '{{ cloudflare_api_token }}'
     }
@@ -21,5 +22,11 @@
 - name: Remove Generated Inventory
   file:
     path: "{{ playbook_dir }}/production"
+    state: absent
+  when: state == "absent"
+
+- name: Remove Generated Group Vars
+  file:
+    path: "{{ playbook_dir }}/group_vars/all/terraform_outputs.yaml"
     state: absent
   when: state == "absent"

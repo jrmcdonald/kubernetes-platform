@@ -1,0 +1,13 @@
+- name: Create Kube Config
+  include_role:
+    name: kubernetes/client
+  vars:
+    kubeconfig_localhost: true
+    kube_apiserver_access_address: "{{ hostvars[groups['kube-master'][0]]['ansible_host'] }}"
+    proxy_env:
+      http_proxy: "{{ http_proxy | default ('') }}"
+      HTTP_PROXY: "{{ http_proxy | default ('') }}"
+      https_proxy: "{{ https_proxy | default ('') }}"
+      HTTPS_PROXY: "{{ https_proxy | default ('') }}"
+      no_proxy: "{{ no_proxy | default ('') }}"
+      NO_PROXY: "{{ no_proxy | default ('') }}"

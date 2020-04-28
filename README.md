@@ -27,6 +27,12 @@ ansible-playbook -i localhost terraform.yaml
 ansible-playbook -i localhost site.yaml
 ```
 
+To set up local config for an existing cluster:
+
+```shell script
+ansible-playbook -i production kubernetes.yaml --become --tags "local" --skip-tags "kubespray"
+```
+
 To tear down the project:
 
 ```shell script

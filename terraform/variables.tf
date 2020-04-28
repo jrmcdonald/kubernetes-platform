@@ -22,6 +22,9 @@ variable "worker_hostname_format" {
 variable "inventory_path" {
 }
 
+variable "group_vars_path" {
+}
+
 /* hcloud */
 variable "hcloud_token" {
   default = ""

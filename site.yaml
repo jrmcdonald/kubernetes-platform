@@ -1,3 +1,0 @@
-- import_playbook: bootstrap-local.yaml
-- import_playbook: bootstrap-nodes.yaml
-- import_playbook: bootstrap-kubernetes.yaml
