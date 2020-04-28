@@ -1,3 +1,13 @@
+- name: NGINX Ingress | Check if outputss dir exists
+  stat: "path={{ role_path }}/outputs"
+  register: outputs_dir_exists
+
+- name: NGINX Ingress | Make sure the known hosts dir exists
+  file:
+    path: "{{ role_path }}/outputs"
+    state: directory
+  when: not outputs_dir_exists.stat.exists
+
 - name: NGINX Ingress | Define Templates
   set_fact:
     ingress_nginx_templates:
