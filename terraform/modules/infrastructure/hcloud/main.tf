@@ -82,3 +82,8 @@ resource "hcloud_floating_ip" "loadbalancer" {
   type          = "ipv4"
   home_location = var.location
 }
+
+resource "hcloud_floating_ip_assignment" "loadbalancer" {
+  floating_ip_id = hcloud_floating_ip.loadbalancer.id
+  server_id      = element(hcloud_server.worker.*.id, 1)
+}
