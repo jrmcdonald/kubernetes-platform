@@ -24,12 +24,14 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Ignore output
+# Ignore Terraform Output
 terraform.stdout
+**/terraform-outputs.yaml
 
-# Ignore ansible files
+# Ignore Ansible Files
 *.retry
 **/production
+**/outputs/
 
 # Ignore Kubespray Outputs
 **/credentials/

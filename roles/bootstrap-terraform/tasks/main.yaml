@@ -7,7 +7,11 @@
       dynamodb_table: '{{ state_table }}'
     project_path: '{{ playbook_dir }}/terraform/'
     state: '{{ state }}'
-    variables: { inventory_path: '{{ playbook_dir }}', hcloud_token: '{{ hcloud_token }}', cloudflare_api_token: '{{ cloudflare_api_token }}' }
+    variables: {
+      inventory_path: '{{ playbook_dir }}',
+      hcloud_token: '{{ hcloud_token }}',
+      cloudflare_api_token: '{{ cloudflare_api_token }}'
+    }
   register: terraform_result
 
 - name: Store Terraform Output
