@@ -144,6 +144,7 @@ jobs:
         run: ansible-playbook -i production kubernetes.yaml --become
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
+          KUBECONFIG: artifacts/admin.conf
 
       - name: Notify Slack Success
         if: success()
