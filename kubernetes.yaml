@@ -45,3 +45,17 @@
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
   roles:
     - { role: local/kube-config, tags: local }
+
+- name: Install Kubernetes Apps
+  hosts: localhost
+  connection: local
+  become: no
+  roles:
+    - { role: kubernetes/apps/metallb, tags: apps }
+    - { role: kubernetes/apps/ingress-nginx, tags: apps }
+    - { role: kubernetes/apps/cert-manager, tags: apps }
+  tasks:
+    - name: Execute Install Script
+      command: "bash {{ playbook_dir }}/scripts/install_kubernetes_apps.sh"
+      changed_when: false
+      tags: apps
