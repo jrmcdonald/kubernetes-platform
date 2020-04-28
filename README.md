@@ -9,22 +9,32 @@ A set of Ansible & Terraform scripts to manage and deploy a Kubernetes platform 
 * [Terraform](https://www.terraform.io/)
 * [Ansible](https://www.ansible.com/)
 * [GnuPG](https://gnupg.org/)
+* [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* [Helm](https://helm.sh/)
 
 ## Manual execution
 
-*Note:* you must be keyed to the `.vault-pass` file to execute the `terraform.yaml` playbook.
+*Note:* you must be keyed to the `.vault-pass` file to execute the playbooks.
 
 From the project root:
 
 ```shell script
+# install python libraries
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+pip install -r kubespray/requirements.txt
+
+# install mitogen
+ANSIBLE_STRATEGY=linear ansible-playbook mitogen.yaml
+
 # install roles
 ansible-galaxy install -r requirements.yaml
 
 # setup cloud infrastructure
-ansible-playbook -i localhost terraform.yaml
+ansible-playbook terraform.yaml
 
 # bootstrap nodes & configure kubernetes
-ansible-playbook -i localhost site.yaml
+ansible-playbook -i production kubernetes.yaml --become
 ```
 
 To set up local config for an existing cluster:

@@ -1,11 +1,13 @@
 - name: Build Terraform State Store
   hosts: localhost
   connection: local
+  become: no
   roles:
     - { role: bootstrap/terraform-state }
 
 - name: Execute Terraform
   hosts: localhost
   connection: local
+  become: no
   roles:
     - { role: bootstrap/terraform }
