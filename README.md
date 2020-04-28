@@ -25,7 +25,7 @@ pip install -r requirements.txt
 pip install -r kubespray/requirements.txt
 
 # install mitogen
-ANSIBLE_STRATEGY=linear ansible mitogen.yaml
+ANSIBLE_STRATEGY=linear ansible-playbook mitogen.yaml
 
 # install roles
 ansible-galaxy install -r requirements.yaml
