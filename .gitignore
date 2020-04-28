@@ -27,9 +27,10 @@ terraform.rc
 # Ignore Terraform Output
 terraform.stdout
 
-# Ignore Snsible Files
+# Ignore Ansible Files
 *.retry
 **/production
+**/outputs/
 **/terraform-outputs.yaml
 **/outputs/
 
