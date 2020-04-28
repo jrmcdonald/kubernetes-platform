@@ -1,9 +1,6 @@
 # IDEs
 .idea
 
-# kube config
-.kubeconfig
-
 # Local .terraform directories
 **/.terraform/*
 
@@ -29,11 +26,14 @@ terraform.stdout
 
 # Ignore Ansible Files
 *.retry
+**/plugins/
 **/production
 **/outputs/
 **/terraform-outputs.yaml
-**/outputs/
 
 # Ignore Kubespray Outputs
 **/credentials/
 **/artifacts/
+
+# Distribution / packaging
+dist/

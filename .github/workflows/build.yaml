@@ -123,11 +123,17 @@ jobs:
         run: |
           ansible-galaxy install -r requirements.yaml
 
+      - name: Install Ansible Mitogen
+        run: |
+          ansible mitogen.yaml
+      env:
+        ANSIBLE_STRATEGY: linear
+
       - name: Ansible Run - terraform.yaml
-        run: ansible-playbook -i localhost terraform.yaml
+        run: ansible-playbook terraform.yaml
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
-          
+
       - name: Upload Terraform Output
         uses: actions/upload-artifact@v1
         with:
