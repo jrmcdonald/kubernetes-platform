@@ -35,6 +35,9 @@ ansible-playbook terraform.yaml
 
 # bootstrap nodes & configure kubernetes
 ansible-playbook -i production kubernetes.yaml --become
+
+# now find the flux ssh key and add as a deployer to helm-charts repo with write access
+fluxctl identity --k8s-fwd-ns fluxcd
 ```
 
 To set up local config for an existing cluster:
