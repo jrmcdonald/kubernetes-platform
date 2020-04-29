@@ -1,0 +1,21 @@
+- name: Weave Flux | Check if outputs dir exists
+  stat: "path={{ role_path }}/outputs"
+  register: outputs_dir_exists
+
+- name: Weave Flux | Make sure the outputs dir exists
+  file:
+    path: "{{ role_path }}/outputs"
+    state: directory
+  when: not outputs_dir_exists.stat.exists
+
+- name: Weave Flux | Define Templates
+  set_fact:
+    weave_flux_templates:
+      - { name: 00-namespace, file: 00-namespace.yaml }
+
+- name: Weave Flux | Create Templates
+  template:
+    src: "{{ item.file }}.j2"
+    dest: "{{ role_path }}/outputs/{{ item.file }}"
+  with_items: "{{ weave_flux_templates }}"
+  register: weave_flux_templates_output
