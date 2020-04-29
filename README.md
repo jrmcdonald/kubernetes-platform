@@ -49,5 +49,5 @@ ansible-playbook -i production kubernetes.yaml --become --tags "local" --skip-ta
 To tear down the project:
 
 ```shell script
-ansible-playbook -i localhost terraform.yaml --extra-vars "state=absent"
+ansible-playbook terraform.yaml --extra-vars "state=absent"
 ```
