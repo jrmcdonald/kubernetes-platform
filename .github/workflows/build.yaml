@@ -28,7 +28,7 @@ jobs:
         uses: jrmcdonald/ansible-lint-action@master
         with:
           targets: |
-            site.yaml
+            kubernetes.yaml
             terraform.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
