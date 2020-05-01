@@ -112,6 +112,10 @@ jobs:
           ssh-add -L
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
+          
+      - name: Install fluxctl
+        run: |
+          sudo snap install fluxctl
 
       - name: Install Python Dependencies
         run: |
