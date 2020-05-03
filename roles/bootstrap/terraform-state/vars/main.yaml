@@ -1,3 +1,0 @@
-state_bucket: qwyck-platform-terraform-state
-state_table: qwyck-platform-terraform-lock
-region: eu-west-1

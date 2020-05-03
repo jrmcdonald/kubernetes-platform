@@ -1,4 +1,7 @@
-variable "token" {}
+variable "token" {
+  type    = string
+  default = ""
+}
 
 variable "master_count" {
   default = 0
@@ -39,4 +42,12 @@ variable "ssh_keys" {
 variable "apt_packages" {
   type    = list(string)
   default = []
+}
+
+variable "ip_range" {
+  type = string
+}
+
+variable "subnet_ip_range" {
+  type = string
 }

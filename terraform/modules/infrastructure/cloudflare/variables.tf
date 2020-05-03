@@ -1,7 +1,15 @@
-variable "email" {}
+variable "email" {
+  type = string
+}
 
-variable "api_token" {}
+variable "api_token" {
+  type = string
+}
 
-variable "domain" {}
+variable "domain" {
+  type = string
+}
 
-variable "loadbalancer_ip" {}
+variable "loadbalancer_ip" {
+  type = string
+}

@@ -8,17 +8,19 @@ terraform {
 module "provider" {
   source = "./modules/infrastructure/hcloud"
 
-  master_count           = var.master_count
-  worker_count           = var.worker_count
-  master_hostname_format = var.master_hostname_format
-  worker_hostname_format = var.worker_hostname_format
+  master_count           = var.hcloud_master_count
+  worker_count           = var.hcloud_worker_count
+  master_hostname_format = var.hcloud_master_hostname_format
+  worker_hostname_format = var.hcloud_worker_hostname_format
 
-  token       = var.hcloud_token
-  ssh_keys    = var.hcloud_ssh_keys
-  location    = var.hcloud_location
-  master_type = var.hcloud_master_type
-  worker_type = var.hcloud_worker_type
-  image       = var.hcloud_image
+  token           = var.hcloud_token
+  ssh_keys        = var.hcloud_ssh_keys
+  location        = var.hcloud_location
+  master_type     = var.hcloud_master_type
+  worker_type     = var.hcloud_worker_type
+  image           = var.hcloud_image
+  ip_range        = var.hcloud_ip_range
+  subnet_ip_range = var.hcloud_subnet_ip_range
 }
 
 module "dns" {
@@ -26,14 +28,14 @@ module "dns" {
 
   email           = var.cloudflare_email
   api_token       = var.cloudflare_api_token
-  domain          = var.domain
+  domain          = var.cloudflare_domain
   loadbalancer_ip = module.provider.loadbalancer_ip
 }
 
 module "inventory" {
   source = "./modules/ansible/inventory"
 
-  inventory_path     = var.inventory_path
+  inventory_path     = var.ansible_inventory_path
   master_hostnames   = module.provider.master_hostnames
   master_private_ips = module.provider.master_private_ips
   master_public_ips  = module.provider.master_public_ips
@@ -45,6 +47,6 @@ module "inventory" {
 module "group_vars" {
   source = "./modules/ansible/group_vars"
 
-  group_vars_path = var.group_vars_path
+  group_vars_path = var.ansible_group_vars_path
   loadbalancer_ip = module.provider.loadbalancer_ip
 }

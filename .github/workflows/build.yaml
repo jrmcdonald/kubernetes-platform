@@ -143,18 +143,6 @@ jobs:
         env:
           SSH_AUTH_SOCK: ${{ env.ssh_sock_dir }}
 
-      - name: Upload Terraform Output
-        uses: actions/upload-artifact@v1
-        with:
-          name: terraform.stdout
-          path: terraform.stdout
-
-      - name: Upload Ansible Inventory
-        uses: actions/upload-artifact@v1
-        with:
-          name: production
-          path: production
-
       - name: Ansible Run - kubernetes.yaml
         run: ansible-playbook -i production kubernetes.yaml --become
         env:
