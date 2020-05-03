@@ -2,26 +2,29 @@
   terraform:
     force_init: true
     backend_config:
-      region: '{{ region }}'
-      bucket: '{{ state_bucket }}'
-      dynamodb_table: '{{ state_table }}'
+      region: '{{ aws_region }}'
+      bucket: '{{ aws_state_bucket }}'
+      dynamodb_table: '{{ aws_state_table }}'
     project_path: '{{ playbook_dir }}/terraform/'
-    state: '{{ state }}'
+    state: '{{ terraform_state }}'
     variables: {
-      inventory_path: '{{ playbook_dir }}',
-      group_vars_path: '{{ playbook_dir }}/group_vars/all/',
+      ansible_inventory_path: '{{ playbook_dir }}',
+      ansible_group_vars_path: '{{ playbook_dir }}/group_vars/all/',
       hcloud_token: '{{ hcloud_token }}',
-      hcloud_ssh_keys: '{{ hcloud_ssh_keys | to_json }}'
-      hcloud_image: ubuntu-18.04
-      hcloud_location: nbg1
-      hcloud_master_count: 1
-      hcloud_master_type: cx11
-      hcloud_master_hostname_format: master-%d
-      hcloud_worker_count: 2
-      hcloud_worker_type: cx11
-      hcloud_worker_hostname_format: worker-%d
-      cloudflare_api_token: '{{ cloudflare_api_token }}'
-      cloudflare_email: '{{ cloudflare_email }}'
+      hcloud_ssh_keys: '{{ hcloud_ssh_keys|to_json }}',
+      hcloud_image: '{{ hcloud_image }}',
+      hcloud_location: '{{ hcloud_location }}',
+      hcloud_master_count: '{{ hcloud_master_count }}',
+      hcloud_master_type: '{{ hcloud_master_type }}',
+      hcloud_master_hostname_format: '{{ hcloud_master_hostname_format }}',
+      hcloud_worker_count: '{{ hcloud_worker_count }}',
+      hcloud_worker_type: '{{ hcloud_worker_type }}',
+      hcloud_worker_hostname_format: '{{ hcloud_worker_hostname_format }}',
+      hcloud_ip_range: '{{ hcloud_ip_range }}',
+      hcloud_subnet_ip_range: '{{ hcloud_subnet_ip_range }}',
+      cloudflare_api_token: '{{ cloudflare_api_token }}',
+      cloudflare_domain: '{{ cloudflare_domain }}',
+      cloudflare_email: '{{ cloudflare_email }}',
     }
   register: terraform_result
 
@@ -33,10 +36,10 @@
   file:
     path: "{{ playbook_dir }}/production"
     state: absent
-  when: state == "absent"
+  when: terraform_state == "absent"
 
 - name: Remove Generated Group Vars
   file:
     path: "{{ playbook_dir }}/group_vars/all/terraform_outputs.yaml"
     state: absent
-  when: state == "absent"
+  when: terraform_state == "absent"

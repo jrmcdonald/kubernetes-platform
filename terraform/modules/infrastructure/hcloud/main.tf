@@ -54,14 +54,14 @@ resource "hcloud_server" "worker" {
 
 resource "hcloud_network" "kubernetes" {
   name     = "kubernetes"
-  ip_range = "172.16.0.0/12"
+  ip_range = var.ip_range
 }
 
 resource "hcloud_network_subnet" "kubernetes" {
   network_id   = hcloud_network.kubernetes.id
   network_zone = "eu-central"
   type         = "server"
-  ip_range     = "172.16.0.0/24"
+  ip_range     = var.subnet_ip_range
 }
 
 resource "hcloud_server_network" "master" {

@@ -1,4 +1,7 @@
-variable "token" {}
+variable "token" {
+  type    = string
+  default = ""
+}
 
 variable "master_count" {
   default = 0

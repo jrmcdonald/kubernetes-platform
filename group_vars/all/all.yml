@@ -7,9 +7,14 @@ aws_state_bucket: qwyck-platform-terraform-state
 aws_state_table: qwyck-platform-terraform-lock
 aws_region: eu-west-1
 
+terraform_state: present
+
 ## Hetzner Cloud Vars
 hcloud_image: ubuntu-18.04
 hcloud_location: nbg1
+
+hcloud_ip_range: '172.16.0.0/12'
+hcloud_subnet_ip_range: '172.16.0.0/24'
 
 hcloud_master_count: 1
 hcloud_master_type: cx11

@@ -11,6 +11,7 @@
   register: check_public_block_cmd
   changed_when: false
   failed_when: false
+  check_mode: always
 
 - name: Block public access to bucket
   command:
@@ -19,7 +20,6 @@
       - --bucket '{{ aws_state_bucket }}'
       - --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
   when: check_public_block_cmd.rc != 0
-  check_mode: no
 
 - name: Create terraform lock table
   include_role:
