@@ -1,6 +1,11 @@
 name: build
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+    - 'docs/**'
+    - 'README.md'
+  pull_request:
 
 env:
   slack-channel: 'status-ci-cd'

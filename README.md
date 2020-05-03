@@ -4,6 +4,12 @@
 
 A set of Ansible & Terraform scripts to manage and deploy a Kubernetes platform to [Hetzner Cloud](https://www.hetzner.com/cloud).
 
+Deploys Kubernetes onto a three node cluster, sets up DNS to point to the cluster, and deploys the [Weave Flux](https://github.com/fluxcd/flux) [Helm Operator](https://github.com/fluxcd/helm-operator-get-started) to manage GitOps deployments of applications to the cluster. 
+
+HelmReleases are managed in the [jrmcdonald/helm-charts](https://github.com/jrmcdonald/helm-charts) repository.
+
+![overview diagram](docs/platform.png)
+
 ## Requirements
 
 * [Terraform](https://www.terraform.io/)
@@ -11,6 +17,7 @@ A set of Ansible & Terraform scripts to manage and deploy a Kubernetes platform 
 * [GnuPG](https://gnupg.org/)
 * [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 * [Helm](https://helm.sh/)
+* [fluxctl](https://docs.fluxcd.io/en/1.17.1/references/fluxctl.html)
 
 ## Manual execution
 
@@ -35,9 +42,6 @@ ansible-playbook terraform.yaml
 
 # bootstrap nodes & configure kubernetes
 ansible-playbook -i production kubernetes.yaml --become
-
-# now find the flux ssh key and add as a deployer to helm-charts repo with write access
-fluxctl identity --k8s-fwd-ns fluxcd
 ```
 
 To set up local config for an existing cluster:
