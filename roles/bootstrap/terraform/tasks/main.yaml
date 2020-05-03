@@ -11,7 +11,17 @@
       inventory_path: '{{ playbook_dir }}',
       group_vars_path: '{{ playbook_dir }}/group_vars/all/',
       hcloud_token: '{{ hcloud_token }}',
+      hcloud_ssh_keys: '{{ hcloud_ssh_keys | to_json }}'
+      hcloud_image: ubuntu-18.04
+      hcloud_location: nbg1
+      hcloud_master_count: 1
+      hcloud_master_type: cx11
+      hcloud_master_hostname_format: master-%d
+      hcloud_worker_count: 2
+      hcloud_worker_type: cx11
+      hcloud_worker_hostname_format: worker-%d
       cloudflare_api_token: '{{ cloudflare_api_token }}'
+      cloudflare_email: '{{ cloudflare_email }}'
     }
   register: terraform_result
 

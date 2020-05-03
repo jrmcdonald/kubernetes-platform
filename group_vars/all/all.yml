@@ -1,101 +1,48 @@
 ---
-## Use python3
+## Ansible Vars
 ansible_python_interpreter: /usr/bin/python3
 
-## Directory where etcd data stored
-etcd_data_dir: /var/lib/etcd
+## Terraform Vars
+aws_state_bucket: qwyck-platform-terraform-state
+aws_state_table: qwyck-platform-terraform-lock
+aws_region: eu-west-1
 
-## Experimental kubeadm etcd deployment mode. Available only for new deployment
-etcd_kubeadm_enabled: false
+## Hetzner Cloud Vars
+hcloud_image: ubuntu-18.04
+hcloud_location: nbg1
 
-## Directory where the binaries will be installed
+hcloud_master_count: 1
+hcloud_master_type: cx11
+hcloud_master_hostname_format: master-%d
+
+hcloud_worker_count: 2
+hcloud_worker_type: cx11
+hcloud_worker_hostname_format: worker-%d
+
+hcloud_ssh_keys:
+  - "cardno:000611341223"
+  - "jamie@ios"
+  - "github-ci@qwyck.net"
+  - "ansible@macbook"
+
+## Cloudflare Vars
+cloudflare_email: jamie.mcdonald@qwyck.net
+cloudflare_domain: qwyck-cloud.co.uk
+
+## Kubespray Vars
 bin_dir: /usr/local/bin
 
-## The access_ip variable is used to define how other nodes should access
-## the node.  This is used in flannel to allow other flannel nodes to see
-## this node for example.  The access_ip is really useful AWS and Google
-## environments where the nodes are accessed remotely by the "public" ip,
-## but don't know about that address themselves.
-# access_ip: 1.1.1.1
+etcd_data_dir: /var/lib/etcd
+etcd_kubeadm_enabled: false
 
-
-## External LB example config
-## apiserver_loadbalancer_domain_name: "elb.some.domain"
-# loadbalancer_apiserver:
-#   address: 1.2.3.4
-#   port: 1234
-
-## Internal loadbalancers for apiservers
-# loadbalancer_apiserver_localhost: true
-# valid options are "nginx" or "haproxy"
-# loadbalancer_apiserver_type: nginx # valid values "nginx" or "haproxy"
-
-## Local loadbalancer should use this port
-## And must be set port 6443
 loadbalancer_apiserver_port: 6443
-
-## If loadbalancer_apiserver_healthcheck_port variable defined, enables proxy liveness check for nginx.
 loadbalancer_apiserver_healthcheck_port: 8081
 
-### OTHER OPTIONAL VARIABLES
-## For some things, kubelet needs to load kernel modules.  For example, dynamic kernel services are needed
-## for mounting persistent volumes into containers.  These may not be loaded by preinstall kubernetes
-## processes.  For example, ceph and rbd backed volumes.  Set to true to allow kubelet to load kernel
-## modules.
-# kubelet_load_modules: false
-
-## Upstream dns servers
-# upstream_dns_servers:
-#   - 8.8.8.8
-#   - 8.8.4.4
-
-## There are some changes specific to the cloud providers
-## for instance we need to encapsulate packets with some network plugins
-## If set the possible values are either 'gce', 'aws', 'azure', 'openstack', 'vsphere', 'oci', or 'external'
-## When openstack is used make sure to source in the openstack credentials
-## like you would do when using openstack-client before starting the playbook.
-# cloud_provider:
-
-## When cloud_provider is set to 'external', you can set the cloud controller to deploy
-## Supported cloud controllers are: 'openstack' and 'vsphere'
-## When openstack or vsphere are used make sure to source in the required fields
-# external_cloud_provider:
-
-## Set these proxy values in order to update package manager and docker daemon to use proxies
-# http_proxy: ""
-# https_proxy: ""
-
-## Refer to roles/kubespray-defaults/defaults/main.yml before modifying no_proxy
-# no_proxy: ""
-
-## Some problems may occur when downloading files over https proxy due to ansible bug
-## https://github.com/ansible/ansible/issues/32750. Set this variable to False to disable
-## SSL validation of get_url module. Note that kubespray will still be performing checksum validation.
-# download_validate_certs: False
-
-## If you need exclude all cluster nodes from proxy and other resources, add other resources here.
-# additional_no_proxy: ""
-
-## Certificate Management
-## This setting determines whether certs are generated via scripts.
-## Chose 'none' if you provide your own certificates.
-## Option is  "script", "none"
-## note: vault is removed
-# cert_management: script
-
-## Set to true to allow pre-checks to fail and continue deployment
-# ignore_assert_errors: false
-
-## The read-only port for the Kubelet to serve on with no authentication/authorization. Uncomment to enable.
-# kube_read_only_port: 10255
-
-## Set true to download and cache container
-# download_container: true
-
-## Deploy container engine
-# Set false if you want to deploy container engine manually.
-# deploy_container_engine: true
-
-## Set Pypi repo and cert accordingly
-# pyrepo_index: https://pypi.example.com/simple
-# pyrepo_cert: /etc/ssl/certs/ca-certificates.crt
+## Kubespray Docker Vars
+docker_bin_dir: "/usr/bin"
+docker_container_storage_setup: false
+docker_daemon_graph: "/var/lib/docker"
+docker_dns_servers_strict: false
+docker_iptables_enabled: "false"
+docker_log_opts: "--log-opt max-size=50m --log-opt max-file=5"
+docker_rpm_keepcache: 0

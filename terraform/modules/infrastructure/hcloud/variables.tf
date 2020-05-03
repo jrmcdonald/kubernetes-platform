@@ -40,3 +40,11 @@ variable "apt_packages" {
   type    = list(string)
   default = []
 }
+
+variable "ip_range" {
+  type = string
+}
+
+variable "subnet_ip_range" {
+  type = string
+}
