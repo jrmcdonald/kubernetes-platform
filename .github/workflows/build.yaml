@@ -29,6 +29,10 @@ jobs:
         with:
           submodules: true
 
+      - name: Install Ansible Galaxy Dependencies
+        run: |
+          ansible-galaxy collection install -r requirements.yaml
+
       - name: Ansible Lint
         uses: jrmcdonald/ansible-lint-action@master
         with:
