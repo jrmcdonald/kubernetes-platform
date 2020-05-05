@@ -1,22 +1,18 @@
-- name: Metallb | Check if outputss dir exists
-  stat: "path={{ role_path }}/outputs"
-  register: outputs_dir_exists
+- name: MetalLB | Define Namespace 
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: "{{ metallb_namespace }}"
+    wait: true
+    
+- name: MetalLB | Add Stable Repository
+  helm_repository:
+    name: stable
+    repo_url: "https://kubernetes-charts.storage.googleapis.com"
 
-- name: Metallb | Make sure the known hosts dir exists
-  file:
-    path: "{{ role_path }}/outputs"
-    state: directory
-  when: not outputs_dir_exists.stat.exists
-
-- name: Metallb | Define Templates
-  set_fact:
-    metallb_templates:
-      - { name: 00-namespace, file: 00-namespace.yaml }
-      - { name: helm-values, file: values.yaml }
-
-- name: Metallb | Create Templates
-  template:
-    src: "{{ item.file }}.j2"
-    dest: "{{ role_path }}/outputs/{{ item.file }}"
-  with_items: "{{ metallb_templates }}"
-  register: metallb_templates_output
+- name: MetalLB | Deploy
+  helm:
+    name: metallb
+    chart_ref: stable/metallb
+    release_namespace: "{{ metallb_namespace }}"
+    values: "{{ lookup('template', 'values.yaml') | from_yaml }}"

@@ -1,4 +1,7 @@
 ---
+collections:
+  - name: community.kubernetes
+  
 roles:
   - name: dev-sec.os-hardening
   - name: dev-sec.ssh-hardening

@@ -128,9 +128,10 @@ jobs:
           pip install -r requirements.txt
           pip install -r kubespray/requirements.txt
 
-      - name: Install Ansible Roles
+      - name: Install Ansible Galaxy Dependencies
         run: |
-          ansible-galaxy install -r requirements.yaml
+          ansible-galaxy role install -r requirements.yaml
+          ansible-galaxy collection install -r requirements.yaml
 
       - name: Install Ansible Mitogen
         run: |
