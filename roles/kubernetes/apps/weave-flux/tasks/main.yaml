@@ -1,5 +1,5 @@
-- name: Weave Flux | Define Namespace 
-  k8s:
+- name: Weave Flux | Define Namespace
+  community.kubernetes.k8s:
     api_version: v1
     kind: Namespace
     name: "{{ weave_flux_namespace }}"
@@ -11,18 +11,18 @@
     dest: files/weave-flux.crds.yaml
 
 - name: Weave Flux | Apply CRD
-  k8s:
+  community.kubernetes.k8s:
     state: present
     apply: yes
     definition: "{{ lookup('file', 'weave-flux.crds.yaml') }}"
-    
+
 - name: Weave Flux | Add Fluxcd Repository
-  helm_repository:
+  community.kubernetes.helm_repository:
     name: fluxcd
     repo_url: "https://charts.fluxcd.io"
-    
+
 - name: Weave Flux | Deploy Flux
-  helm:
+  community.kubernetes.helm:
     name: flux
     chart_ref: fluxcd/fluxcd
     release_namespace: "{{ weave_flux_namespace }}"
@@ -31,7 +31,7 @@
         url: git@github.com:jrmcdonald/helm-charts
 
 - name: Weave Flux | Deploy Helm Operator
-  helm:
+  community.kubernetes.helm:
     name: helm-operator
     chart_ref: fluxcd/helm-operator
     release_namespace: "{{ weave_flux_namespace }}"

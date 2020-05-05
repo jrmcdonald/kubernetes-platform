@@ -1,18 +1,18 @@
-- name: MetalLB | Define Namespace 
-  k8s:
+- name: MetalLB | Define Namespace
+  community.kubernetes.k8s:
     api_version: v1
     kind: Namespace
     name: "{{ metallb_namespace }}"
     wait: true
-    
+
 - name: MetalLB | Add Stable Repository
-  helm_repository:
+  community.kubernetes.helm_repository:
     name: stable
     repo_url: "https://kubernetes-charts.storage.googleapis.com"
 
 - name: MetalLB | Deploy
-  helm:
+  community.kubernetes.helm:
     name: metallb
     chart_ref: stable/metallb
     release_namespace: "{{ metallb_namespace }}"
-    values: "{{ lookup('template', 'values.yaml') | from_yaml }}"
+    values: "{{ lookup('template', 'values.yaml.j2') | from_yaml }}"

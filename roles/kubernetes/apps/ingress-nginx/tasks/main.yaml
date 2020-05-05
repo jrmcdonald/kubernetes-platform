@@ -1,17 +1,17 @@
-- name: NGINX Ingress | Define Namespace 
-  k8s:
+- name: NGINX Ingress | Define Namespace
+  community.kubernetes.k8s:
     api_version: v1
     kind: Namespace
     name: "{{ ingress_nginx_namespace }}"
     wait: true
-    
+
 - name: NGINX Ingress | Add Stable Repository
-  helm_repository:
+  community.kubernetes.helm_repository:
     name: stable
     repo_url: "https://kubernetes-charts.storage.googleapis.com"
 
 - name: NGINX Ingress | Deploy
-  helm:
+  community.kubernetes.helm:
     name: ingress-nginx
     chart_ref: stable/nginx-ingress
     release_namespace: "{{ ingress_nginx_namespace }}"
