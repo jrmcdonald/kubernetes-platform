@@ -48,6 +48,7 @@
 
 - name: Install Kubernetes Apps
   hosts: localhost
+  strategy: linear
   connection: local
   become: no
   roles:
@@ -55,29 +56,3 @@
     - { role: kubernetes/apps/ingress-nginx, tags: apps }
     - { role: kubernetes/apps/cert-manager, tags: apps }
     - { role: kubernetes/apps/weave-flux, tags: apps }
-  tasks:
-    - name: Execute Install Script
-      command: "bash {{ playbook_dir }}/scripts/install_kubernetes_apps.sh"
-      changed_when: false
-      tags: apps
-
-- name: Install Flux Deploy Key
-  hosts: localhost
-  connection: local
-  become: no
-  tags: apps
-  tasks:
-    - name: Get Flux Deploy Key
-      command: fluxctl --k8s-fwd-ns fluxcd identity
-      changed_when: false
-      register: fluxctl_cmd
-      check_mode: always
-
-    - name: Add Flux Deploy Key to GitHub
-      flux_deploy_key:
-        repo: 'jrmcdonald/helm-charts'
-        title: 'fluxcd'
-        key: '{{ fluxctl_cmd.stdout }}'
-        read_only: false
-        replace: true
-        token: '{{ github_token }}'

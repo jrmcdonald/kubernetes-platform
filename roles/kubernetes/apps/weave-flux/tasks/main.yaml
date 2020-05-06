@@ -1,21 +1,60 @@
-- name: Weave Flux | Check if outputs dir exists
-  stat: "path={{ role_path }}/outputs"
-  register: outputs_dir_exists
+- name: Weave Flux | Define Namespace
+  community.kubernetes.k8s:
+    api_version: v1
+    kind: Namespace
+    name: "{{ weave_flux_namespace }}"
+    wait: true
 
-- name: Weave Flux | Make sure the outputs dir exists
-  file:
-    path: "{{ role_path }}/outputs"
-    state: directory
-  when: not outputs_dir_exists.stat.exists
+- name: Weave Flux | Download CRD
+  get_url:
+    url: https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/crds.yaml
+    dest: "{{ role_path }}/files/weave-flux.crds.yaml"
+  check_mode: always
 
-- name: Weave Flux | Define Templates
-  set_fact:
-    weave_flux_templates:
-      - { name: 00-namespace, file: 00-namespace.yaml }
+- name: Weave Flux | Apply CRD
+  community.kubernetes.k8s:
+    state: present
+    apply: yes
+    definition: "{{ lookup('file', 'weave-flux.crds.yaml') }}"
 
-- name: Weave Flux | Create Templates
-  template:
-    src: "{{ item.file }}.j2"
-    dest: "{{ role_path }}/outputs/{{ item.file }}"
-  with_items: "{{ weave_flux_templates }}"
-  register: weave_flux_templates_output
+- name: Weave Flux | Add Fluxcd Repository
+  community.kubernetes.helm_repository:
+    name: fluxcd
+    repo_url: "https://charts.fluxcd.io"
+
+- name: Weave Flux | Deploy Flux
+  community.kubernetes.helm:
+    name: flux
+    chart_ref: fluxcd/flux
+    release_namespace: "{{ weave_flux_namespace }}"
+    values:
+      git:
+        url: git@github.com:jrmcdonald/helm-charts
+
+- name: Weave Flux | Deploy Helm Operator
+  community.kubernetes.helm:
+    name: helm-operator
+    chart_ref: fluxcd/helm-operator
+    release_namespace: "{{ weave_flux_namespace }}"
+    wait: true
+    values:
+      helm:
+        versions: v3
+      git:
+        ssh:
+          secretName: flux-git-deploy
+
+- name: Get Flux Deploy Key
+  command: fluxctl --k8s-fwd-ns fluxcd identity
+  changed_when: false
+  register: fluxctl_cmd
+  check_mode: always
+
+- name: Add Flux Deploy Key to GitHub
+  flux_deploy_key:
+    repo: 'jrmcdonald/helm-charts'
+    title: 'fluxcd'
+    key: '{{ fluxctl_cmd.stdout }}'
+    read_only: false
+    replace: true
+    token: '{{ github_token }}'
