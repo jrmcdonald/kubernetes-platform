@@ -22,6 +22,7 @@ override.tf.json
 terraform.rc
 
 # Ignore Ansible Files
+ansible_collections/
 *.retry
 **/plugins/
 **/production
