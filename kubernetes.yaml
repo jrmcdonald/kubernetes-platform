@@ -56,3 +56,4 @@
     - { role: kubernetes/apps/ingress-nginx, tags: apps }
     - { role: kubernetes/apps/cert-manager, tags: apps }
     - { role: kubernetes/apps/weave-flux, tags: apps }
+    - { role: kubernetes/apps/hcloud/fip-controller, tags: apps }

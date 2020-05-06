@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fip-controller-config
+  namespace: fip-controller
+data:
+  config.json: |
+    {
+      "node_address_type": "internal",
+      "hcloud_floating_ips": [
+        "{{ loadbalancer_ip }}"
+      ]
+    }
