@@ -1,0 +1,41 @@
+- name: Floating IP Controller | Define Namespace
+  community.kubernetes.k8s:
+    api_version: v1
+    kind: Namespace
+    name: "{{ fip_controller_namespace }}"
+    wait: true
+
+- name: Floating IP Controller | Define Deployment Files
+  set_fact:
+    fip_controller_deployment_files:
+      - { name: rbac, file: fip-rbac.yaml }
+      - { name: daemonset, file: fip-daemonset.yaml }
+
+- name: Floating IP Controller | Download Deplmoyent Files
+  get_url:
+    url: "https://raw.githubusercontent.com/cbeneke/hcloud-fip-controller/{{ fip_controller_version }}/deploy/{{ item.name }}.yaml"
+    dest: "{{ role_path }}/files/{{ item.file }}"
+  with_items: "{{ fip_controller_deployment_files }}"
+  check_mode: always
+
+- name: Floating IP Controller | Apply Deployment Files
+  community.kubernetes.k8s:
+    state: present
+    apply: yes
+    namespace: "{{ fip_controller_namespace }}"
+    definition: "{{ lookup('file', item.file) }}"
+  with_items: "{{ fip_controller_deployment_files }}"
+
+- name: Floating IP Controller | Define Config Templates
+  set_fact:
+    fip_controller_config_templates:
+      - { name: configmap, file: configmap.yaml.j2 }
+      - { name: secret, file: secret.yaml.j2 }
+
+- name: Floating IP Controller | Apply Config Templates
+  community.kubernetes.k8s:
+    state: present
+    apply: yes
+    namespace: "{{ fip_controller_namespace }}"
+    definition: "{{ lookup('template', item.file) }}"
+  with_items: "{{ fip_controller_config_templates }}"
