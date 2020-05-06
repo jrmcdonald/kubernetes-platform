@@ -1,0 +1,10 @@
+module.provider.hcloud_server.worker[0]: Modifying... [id=5677602]
+module.provider.hcloud_server.master[0]: Modifying... [id=5677603]
+module.provider.hcloud_server.worker[1]: Modifying... [id=5677601]
+module.provider.hcloud_server.master[0]: Modifications complete after 1s [id=5677603]
+module.provider.hcloud_server.worker[1]: Modifications complete after 1s [id=5677601]
+module.provider.hcloud_server.worker[0]: Modifications complete after 1s [id=5677602]
+module.inventory.local_file.inventory: Creating...
+module.inventory.local_file.inventory: Creation complete after 0s [id=f0cbe7cd12341aa517c155d79e7716c2a65957af]
+
+Apply complete! Resources: 1 added, 3 changed, 0 destroyed.

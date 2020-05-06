@@ -48,6 +48,7 @@
 
 - name: Install Kubernetes Apps
   hosts: localhost
+  strategy: linear
   connection: local
   become: no
   roles:

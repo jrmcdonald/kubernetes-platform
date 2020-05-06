@@ -8,7 +8,8 @@
 - name: Cert-Manager | Download CRD
   get_url:
     url: https://github.com/jetstack/cert-manager/releases/download/v0.14.2/cert-manager.crds.yaml
-    dest: files/cert-manager.crds.yaml
+    dest: "{{ role_path }}/files/cert-manager.crds.yaml"
+  check_mode: always
 
 - name: Cert-Manager | Apply CRD
   community.kubernetes.k8s:
@@ -30,13 +31,13 @@
 - name: Cert-Manager | Define Issuer Templates
   set_fact:
     cert_manager_issuer_templates:
-      - { name: staging-issuer, file: staging-issuer.yaml }
-      - { name: prod-issuer, file: prod-issuer.yaml }
+      - { name: staging-issuer, file: staging-issuer.yaml.j2 }
+      - { name: prod-issuer, file: prod-issuer.yaml.j2 }
 
 - name: Cert-Manager | Apply Issuer Templates
   community.kubernetes.k8s:
     state: present
     apply: yes
     namespace: "{{ cert_manager_namespace }}"
-    definition: "{{ lookup('templates', {{ item.file }}) }}"
-    with_items: "{{ cert_manager_issuer_templates }}"
+    definition: "{{ lookup('template', item.file) }}"
+  with_items: "{{ cert_manager_issuer_templates }}"

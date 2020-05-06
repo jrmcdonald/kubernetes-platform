@@ -8,7 +8,8 @@
 - name: Weave Flux | Download CRD
   get_url:
     url: https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/crds.yaml
-    dest: files/weave-flux.crds.yaml
+    dest: "{{ role_path }}/files/weave-flux.crds.yaml"
+  check_mode: always
 
 - name: Weave Flux | Apply CRD
   community.kubernetes.k8s:
@@ -24,7 +25,7 @@
 - name: Weave Flux | Deploy Flux
   community.kubernetes.helm:
     name: flux
-    chart_ref: fluxcd/fluxcd
+    chart_ref: fluxcd/flux
     release_namespace: "{{ weave_flux_namespace }}"
     values:
       git:
