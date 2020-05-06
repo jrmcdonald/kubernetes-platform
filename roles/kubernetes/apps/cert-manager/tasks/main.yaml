@@ -27,6 +27,7 @@
     name: cert-manager
     chart_ref: jetstack/cert-manager
     release_namespace: "{{ cert_manager_namespace }}"
+    wait: true
 
 - name: Cert-Manager | Define Issuer Templates
   set_fact:

@@ -21,6 +21,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+**/terraform.stdout
+
 # Ignore Ansible Files
 ansible_collections/
 *.retry

@@ -36,6 +36,7 @@
     name: helm-operator
     chart_ref: fluxcd/helm-operator
     release_namespace: "{{ weave_flux_namespace }}"
+    wait: true
     values:
       helm:
         versions: v3
