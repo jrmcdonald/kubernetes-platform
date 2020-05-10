@@ -1,0 +1,47 @@
+---
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: {{ rook_cluster_namespace }}
+spec:
+  cephVersion:
+    image: ceph/ceph:{{ rook_ceph_version }}
+    allowUnsupported: false
+  dataDirHostPath: /var/lib/rook
+  skipUpgradeChecks: false
+  continueUpgradeAfterChecksEvenIfNotHealthy: false
+  mon:
+    count: 3
+    allowMultiplePerNode: false
+  mgr:
+    modules:
+    - name: pg_autoscaler
+      enabled: true
+  dashboard:
+    enabled: true
+    ssl: true
+  monitoring:
+    enabled: false
+    rulesNamespace: {{ rook_cluster_namespace }}
+  rbdMirroring:
+    workers: 0
+  crashCollector:
+    disable: false
+  resources:
+    mgr:
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+      requests:
+        cpu: "500m"
+        memory: "1024Mi"
+  removeOSDsIfOutAndSafeToRemove: false
+  storage:
+    useAllNodes: true
+    useAllDevices: false
+    storeConfig:
+      databaseSizeMB: 1024
+      journalSizeMB: 1024
+    devices:
+      - name: "sdb"
