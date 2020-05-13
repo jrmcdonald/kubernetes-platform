@@ -58,7 +58,6 @@ resource "hcloud_volume" "master" {
   name      = format(var.master_hostname_format, count.index + 1)
   size      = 10
   server_id = element(hcloud_server.master.*.id, count.index)
-  automount = true
 }
 
 resource "hcloud_volume" "worker" {
@@ -67,7 +66,6 @@ resource "hcloud_volume" "worker" {
   name      = format(var.worker_hostname_format, count.index + 1)
   size      = 10
   server_id = element(hcloud_server.worker.*.id, count.index)
-  automount = true
 }
 
 resource "hcloud_network" "kubernetes" {

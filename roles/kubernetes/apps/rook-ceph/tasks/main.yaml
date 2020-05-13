@@ -5,8 +5,8 @@
     name: "{{ item }}"
     wait: true
   with_items:
-    - "{{ rook_operator_namespace }}"
-    - "{{ rook_cluster_namespace }}"
+    - "{{ rook_namespace }}"
+    - "{{ rook_namespace }}"
 
 - name: Rook | Add Rook Repository
   community.kubernetes.helm_repository:
@@ -17,19 +17,21 @@
   community.kubernetes.helm:
     name: rook-ceph
     chart_ref: rook-release/rook-ceph
-    release_namespace: "{{ rook_operator_namespace }}"
+    release_namespace: "{{ rook_namespace }}"
     wait: true
 
 - name: Rook | Define Templates
   set_fact:
     rook_templates:
-      - { name: cluster, file: cluster.yaml }
-      - { name: storageclass, file: storageclass.yaml }
+      - { name: cluster, file: cluster.yaml, wait: true }
+      - { name: storageclass, file: storageclass.yaml, wait: true }
+      - { name: toolbox, file: toolbox.yaml, wait: false }
 
 - name: Rook | Apply Templates
   community.kubernetes.k8s:
     state: present
     apply: yes
     namespace: "{{ cert_manager_namespace }}"
-    definition: "{{ lookup('templates', {{ item.file }}) }}"
-    with_items: "{{ rook_templates }}"
+    definition: "{{ lookup('template', item.file) }}"
+    wait: "{{ item.wait }}"
+  with_items: "{{ rook_templates }}"

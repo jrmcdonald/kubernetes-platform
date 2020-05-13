@@ -1,0 +1,11 @@
+- name: Metrics Server | Define Deployment Files
+  set_fact:
+    metrics_server_deployment_files:
+      - { name: components, file: components.yaml }
+
+- name: Metrics Server| Apply Deployment Files
+  community.kubernetes.k8s:
+    state: present
+    apply: yes
+    definition: "{{ lookup('file', item.file) }}"
+  with_items: "{{ metrics_server_deployment_files }}"
