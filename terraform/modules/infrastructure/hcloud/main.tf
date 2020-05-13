@@ -52,6 +52,22 @@ resource "hcloud_server" "worker" {
   }
 }
 
+resource "hcloud_volume" "master" {
+  count = var.master_count
+
+  name      = format(var.master_hostname_format, count.index + 1)
+  size      = 10
+  server_id = element(hcloud_server.master.*.id, count.index)
+}
+
+resource "hcloud_volume" "worker" {
+  count = var.worker_count
+
+  name      = format(var.worker_hostname_format, count.index + 1)
+  size      = 10
+  server_id = element(hcloud_server.worker.*.id, count.index)
+}
+
 resource "hcloud_network" "kubernetes" {
   name     = "kubernetes"
   ip_range = var.ip_range

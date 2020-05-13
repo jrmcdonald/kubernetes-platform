@@ -17,11 +17,11 @@ hcloud_ip_range: '172.16.0.0/12'
 hcloud_subnet_ip_range: '172.16.0.0/24'
 
 hcloud_master_count: 1
-hcloud_master_type: cx11
+hcloud_master_type: cx21
 hcloud_master_hostname_format: master-%d
 
 hcloud_worker_count: 2
-hcloud_worker_type: cx11
+hcloud_worker_type: cx21
 hcloud_worker_hostname_format: worker-%d
 
 hcloud_ssh_keys:
