@@ -31,7 +31,7 @@
   community.kubernetes.k8s:
     state: present
     apply: yes
-    namespace: "{{ cert_manager_namespace }}"
+    namespace: "{{ rook_namespace }}"
     definition: "{{ lookup('template', item.file) }}"
     wait: "{{ item.wait }}"
   with_items: "{{ rook_templates }}"
