@@ -3,7 +3,7 @@
     metrics_server_deployment_files:
       - { name: components, file: components.yaml }
 
-- name: Metrics Server| Apply Deployment Files
+- name: Metrics Server | Apply Deployment Files
   community.kubernetes.k8s:
     state: present
     apply: yes

@@ -25,6 +25,8 @@
         - '6443' # kubernetes secure remote API
         - '6783' # weave
         - '6443' # kubernetes secure remote API
+        - '9100' # node-exporter metrics
+        - '10249' # kube-proxy metrics
         - '10251' # etcd
         - '10252' # etcd
         - '10250' # etcd
