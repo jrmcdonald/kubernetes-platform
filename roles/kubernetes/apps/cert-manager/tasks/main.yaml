@@ -5,18 +5,6 @@
     name: "{{ cert_manager_namespace }}"
     wait: true
 
-- name: Cert-Manager | Download CRD
-  get_url:
-    url: https://github.com/jetstack/cert-manager/releases/download/v0.14.2/cert-manager.crds.yaml
-    dest: "{{ role_path }}/files/cert-manager.crds.yaml"
-  check_mode: always
-
-- name: Cert-Manager | Apply CRD
-  community.kubernetes.k8s:
-    state: present
-    apply: yes
-    definition: "{{ lookup('file', 'cert-manager.crds.yaml') }}"
-
 - name: Cert-Manager | Add Jetstack Repository
   community.kubernetes.helm_repository:
     name: jetstack
@@ -28,6 +16,8 @@
     chart_ref: jetstack/cert-manager
     release_namespace: "{{ cert_manager_namespace }}"
     wait: true
+    values:
+      installCRDs: true
 
 - name: Cert-Manager | Define Issuer Templates
   set_fact:
