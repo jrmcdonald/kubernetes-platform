@@ -3,6 +3,12 @@
     name: stable
     repo_url: "https://kubernetes-charts.storage.googleapis.com"
 
+- name: Sealed Secrets | Apply Master Key
+  community.kubernetes.k8s:
+    state: present
+    apply: yes
+    definition: "{{ lookup('file', 'master-key.yaml') }}"
+
 - name: Sealed Secrets | Deploy
   community.kubernetes.helm:
     name: sealed-secrets
