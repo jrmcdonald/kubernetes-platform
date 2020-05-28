@@ -1,7 +1,7 @@
 - name: Configure Local Settings
   hosts: localhost
   connection: local
-  become: no
+  become: noedit
   roles:
     - { role: local/known-hosts, tags: local }
 
@@ -59,4 +59,5 @@
     - { role: kubernetes/apps/ingress-nginx, tags: apps }
     - { role: kubernetes/apps/cert-manager, tags: apps }
     - { role: kubernetes/apps/sealed-secrets, tags: apps }
+    - { role: kubernetes/apps/monitoring, tags: apps }
     - { role: kubernetes/apps/weave-flux, tags: apps }

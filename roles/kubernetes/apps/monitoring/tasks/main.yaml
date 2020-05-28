@@ -1,0 +1,45 @@
+- name: Monitoring | Define Namespace
+  community.kubernetes.k8s:
+    api_version: v1
+    kind: Namespace
+    name: "{{ monitoring_namespace }}"
+    wait: true
+
+- name: Monitoring | Add Stable Repository
+  community.kubernetes.helm_repository:
+    name: stable
+    repo_url: "https://kubernetes-charts.storage.googleapis.com"
+
+- name: Monitoring | Add Loki Repository
+  community.kubernetes.helm_repository:
+    name: loki
+    repo_url: "https://grafana.github.io/loki/charts"
+
+- name: Monitoring | Deploy Loki
+  community.kubernetes.helm:
+    name: loki
+    chart_ref: loki/loki
+    release_namespace: monitoring
+
+- name: Monitoring | Deploy Promtail
+  community.kubernetes.helm:
+    name: promtail
+    chart_ref: loki/promtail
+    release_namespace: monitoring
+    values:
+      loki:
+        serviceName: loki
+
+- name: Monitoring | Deploy Prometheus
+  community.kubernetes.helm:
+    name: prometheus
+    chart_ref: stable/prometheus-operator
+    release_namespace: monitoring
+    values:
+      grafana:
+        additionalDataSources:
+          - name: Loki
+            type: loki
+            url: http://loki:3100
+            access: proxy
+            isDefault: false
