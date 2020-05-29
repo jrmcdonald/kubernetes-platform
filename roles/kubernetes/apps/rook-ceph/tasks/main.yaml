@@ -1,0 +1,37 @@
+- name: Rook | Define Namespaces
+  community.kubernetes.k8s:
+    api_version: v1
+    kind: Namespace
+    name: "{{ item }}"
+    wait: true
+  with_items:
+    - "{{ rook_namespace }}"
+    - "{{ rook_namespace }}"
+
+- name: Rook | Add Rook Repository
+  community.kubernetes.helm_repository:
+    name: rook-release
+    repo_url: "https://charts.rook.io/release"
+
+- name: Rook | Deploy
+  community.kubernetes.helm:
+    name: rook-ceph
+    chart_ref: rook-release/rook-ceph
+    release_namespace: "{{ rook_namespace }}"
+    wait: true
+
+- name: Rook | Define Templates
+  set_fact:
+    rook_templates:
+      - { name: cluster, file: cluster.yaml, wait: true }
+      - { name: storageclass, file: storageclass.yaml, wait: true }
+      - { name: toolbox, file: toolbox.yaml, wait: false }
+
+- name: Rook | Apply Templates
+  community.kubernetes.k8s:
+    state: present
+    apply: yes
+    namespace: "{{ rook_namespace }}"
+    definition: "{{ lookup('template', item.file) }}"
+    wait: "{{ item.wait }}"
+  with_items: "{{ rook_templates }}"

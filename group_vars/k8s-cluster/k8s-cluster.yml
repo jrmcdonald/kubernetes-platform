@@ -105,6 +105,10 @@ kube_proxy_mode: ipvs
 # must be set to true for MetalLB to work
 kube_proxy_strict_arp: true
 
+# The IP address and port for the metrics server to serve on
+# (set to 0.0.0.0 for all IPv4 interfaces and `::` for all IPv6 interfaces)
+kube_proxy_metrics_bind_address: 0.0.0.0:10249
+
 # A string slice of values which specify the addresses to use for NodePorts.
 # Values may be valid IP blocks (e.g. 1.2.3.0/24, 1.2.3.4/32).
 # The default empty string slice ([]) means to use all local addresses.
@@ -218,6 +222,9 @@ dynamic_kubelet_configuration: false
 # kubelet_config_dir:
 default_kubelet_config_dir: "{{ kube_config_dir }}/dynamic_kubelet_dir"
 dynamic_kubelet_configuration_dir: "{{ kubelet_config_dir | default(default_kubelet_config_dir) }}"
+
+kubelet_config_extra_args:
+  cpuCFSQuota: false
 
 # pod security policy (RBAC must be enabled either by having 'RBAC' in authorization_modes or kubeadm enabled)
 podsecuritypolicy_enabled: false
