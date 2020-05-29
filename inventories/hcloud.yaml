@@ -13,9 +13,7 @@ network: kubernetes
 compose:
   ip: private_ipv4
 groups:
-  all: name.startswith('master') or name.startswith('worker')
+  kube-master: name.startswith('master')
+  kube-node: name.startswith('worker')
+  etcd: name.startswith('master') or name.startswith('worker')
   k8s-cluster:children: name.startswith('master') or name.startswith('worker')
-keyed_groups:
-  - key: labels
-    prefix: ""
-    separator: ""

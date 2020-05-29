@@ -91,9 +91,13 @@ keyed_groups:
 
 import os
 from ansible.errors import AnsibleError
+from ansible.errors import AnsibleParserError
+from ansible.inventory.group import to_safe_group_name as original_safe
 from ansible.module_utils._text import to_native
+from ansible.module_utils.parsing.convert_bool import boolean
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable
 from ansible.release import __version__
+from ansible.utils.vars import combine_vars
 
 try:
     from hcloud import hcloud
@@ -241,11 +245,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
         self._get_servers()
         self._filter_servers()
 
-        # Add a top group 'hcloud'
-        self.inventory.add_group(group="hcloud")
-
         for server in self.servers:
-            self.inventory.add_host(server.name, group="hcloud")
+            self.inventory.add_host(server.name)
             self._set_server_attributes(server)
 
             # Use constructed if applicable
@@ -259,3 +260,26 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
             # Create groups based on variable values and add the corresponding hosts to it
             self._add_host_to_keyed_groups(self.get_option('keyed_groups'), {}, server.name, strict=strict)
+
+    # override this method so we can set force=False on original_safe
+    def _add_host_to_composed_groups(self, groups, variables, host, strict=False):
+        ''' helper to create complex groups for plugins based on jinja2 conditionals, hosts that meet the conditional are added to group'''
+        # process each 'group entry'
+        if groups and isinstance(groups, dict):
+            variables = combine_vars(variables, self.inventory.get_host(host).get_vars())
+            self.templar.available_variables = variables
+            for group_name in groups:
+                conditional = "{%% if %s %%} True {%% else %%} False {%% endif %%}" % groups[group_name]
+                group_name = original_safe(group_name, force=False)
+                try:
+                    result = boolean(self.templar.template(conditional))
+                except Exception as e:
+                    if strict:
+                        raise AnsibleParserError("Could not add host %s to group %s: %s" % (host, group_name, to_native(e)))
+                    continue
+
+                if result:
+                    # ensure group exists, use sanitized name
+                    group_name = self.inventory.add_group(group_name)
+                    # add host to group
+                    self.inventory.add_child(group_name, host)

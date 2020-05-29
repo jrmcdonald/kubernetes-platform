@@ -8,7 +8,6 @@
     project_path: '{{ playbook_dir }}/terraform/'
     state: '{{ terraform_state }}'
     variables: {
-      ansible_inventory_path: '{{ playbook_dir }}',
       ansible_group_vars_path: '{{ playbook_dir }}/group_vars/all/',
       hcloud_token: '{{ hcloud_token }}',
       hcloud_ssh_keys: '{{ hcloud_ssh_keys|to_json }}',
@@ -27,16 +26,6 @@
       cloudflare_email: '{{ cloudflare_email }}',
     }
   register: terraform_result
-
-- name: Store Terraform Output
-  copy: "content={{ terraform_result.stdout }} dest={{ playbook_dir }}/terraform.stdout"
-  delegate_to: localhost
-
-- name: Remove Generated Inventory
-  file:
-    path: "{{ playbook_dir }}/production"
-    state: absent
-  when: terraform_state == "absent"
 
 - name: Remove Generated Group Vars
   file:

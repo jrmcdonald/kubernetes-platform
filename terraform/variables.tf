@@ -1,8 +1,4 @@
 /* general */
-variable "ansible_inventory_path" {
-  type = string
-}
-
 variable "ansible_group_vars_path" {
   type = string
 }
