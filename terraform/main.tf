@@ -8,18 +8,18 @@ terraform {
 module "provider" {
   source = "./modules/infrastructure/hcloud"
 
-  primary_count = var.hcloud_primary_count
-  secondary_count = var.hcloud_secondary_count
-  primary_hostname_format = var.hcloud_primary_hostname_format
+  primary_count             = var.hcloud_primary_count
+  secondary_count           = var.hcloud_secondary_count
+  primary_hostname_format   = var.hcloud_primary_hostname_format
   secondary_hostname_format = var.hcloud_secondary_hostname_format
 
-  token = var.hcloud_token
-  ssh_keys = var.hcloud_ssh_keys
-  location = var.hcloud_location
-  primary_type = var.hcloud_primary_type
-  secondary_type = var.hcloud_secondary_type
-  image = var.hcloud_image
-  ip_range = var.hcloud_ip_range
+  token           = var.hcloud_token
+  ssh_keys        = var.hcloud_ssh_keys
+  location        = var.hcloud_location
+  primary_type    = var.hcloud_primary_type
+  secondary_type  = var.hcloud_secondary_type
+  image           = var.hcloud_image
+  ip_range        = var.hcloud_ip_range
   subnet_ip_range = var.hcloud_subnet_ip_range
 }
 
@@ -35,13 +35,13 @@ module "dns" {
 module "inventory" {
   source = "./modules/ansible/inventory"
 
-  inventory_path = var.ansible_inventory_path
-  primary_hostnames = module.provider.primary_hostnames
-  primary_private_ips = module.provider.primary_private_ips
-  primary_public_ips = module.provider.primary_public_ips
-  secondary_hostnames = module.provider.secondary_hostnames
+  inventory_path        = var.ansible_inventory_path
+  primary_hostnames     = module.provider.primary_hostnames
+  primary_private_ips   = module.provider.primary_private_ips
+  primary_public_ips    = module.provider.primary_public_ips
+  secondary_hostnames   = module.provider.secondary_hostnames
   secondary_private_ips = module.provider.secondary_private_ips
-  secondary_public_ips = module.provider.secondary_public_ips
+  secondary_public_ips  = module.provider.secondary_public_ips
 }
 
 module "group_vars" {
