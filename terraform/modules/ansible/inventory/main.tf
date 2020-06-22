@@ -3,12 +3,12 @@ resource "local_file" "inventory" {
   content = templatefile(
     "${path.module}/templates/inventory.tmpl",
     {
-      master_hostnames   = var.master_hostnames,
-      master_public_ips  = var.master_public_ips,
-      master_private_ips = var.master_private_ips,
-      worker_hostnames   = var.worker_hostnames,
-      worker_public_ips  = var.worker_public_ips,
-      worker_private_ips = var.worker_private_ips,
+      primary_hostnames     = var.primary_hostnames,
+      primary_public_ips    = var.primary_public_ips,
+      primary_private_ips   = var.primary_private_ips,
+      secondary_hostnames   = var.secondary_hostnames,
+      secondary_public_ips  = var.secondary_public_ips,
+      secondary_private_ips = var.secondary_private_ips,
     }
   )
 }
