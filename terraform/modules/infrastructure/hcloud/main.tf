@@ -10,18 +10,18 @@ locals {
   ]
 }
 
-resource "hcloud_server" "master" {
-  count = var.master_count
+resource "hcloud_server" "primary" {
+  count = var.primary_count
 
-  name        = format(var.master_hostname_format, count.index + 1)
-  location    = var.location
-  image       = var.image
-  server_type = var.master_type
-  ssh_keys    = var.ssh_keys
+  name = format(var.primary_hostname_format, count.index + 1)
+  location = var.location
+  image = var.image
+  server_type = var.primary_type
+  ssh_keys = var.ssh_keys
 
   connection {
-    user    = "root"
-    type    = "ssh"
+    user = "root"
+    type = "ssh"
     timeout = "2m"
     host    = self.ipv4_address
   }
@@ -31,18 +31,18 @@ resource "hcloud_server" "master" {
   }
 }
 
-resource "hcloud_server" "worker" {
-  count = var.worker_count
+resource "hcloud_server" "secondary" {
+  count = var.secondary_count
 
-  name        = format(var.worker_hostname_format, count.index + 1)
-  location    = var.location
-  image       = var.image
-  server_type = var.worker_type
-  ssh_keys    = var.ssh_keys
+  name = format(var.secondary_hostname_format, count.index + 1)
+  location = var.location
+  image = var.image
+  server_type = var.secondary_type
+  ssh_keys = var.ssh_keys
 
   connection {
-    user    = "root"
-    type    = "ssh"
+    user = "root"
+    type = "ssh"
     timeout = "2m"
     host    = self.ipv4_address
   }
@@ -52,20 +52,20 @@ resource "hcloud_server" "worker" {
   }
 }
 
-resource "hcloud_volume" "master" {
-  count = var.master_count
+resource "hcloud_volume" "primary" {
+  count = var.primary_count
 
-  name      = format(var.master_hostname_format, count.index + 1)
-  size      = 10
-  server_id = element(hcloud_server.master.*.id, count.index)
+  name = format(var.primary_hostname_format, count.index + 1)
+  size = 10
+  server_id = element(hcloud_server.primary.*.id, count.index)
 }
 
-resource "hcloud_volume" "worker" {
-  count = var.worker_count
+resource "hcloud_volume" "secondary" {
+  count = var.secondary_count
 
-  name      = format(var.worker_hostname_format, count.index + 1)
-  size      = 10
-  server_id = element(hcloud_server.worker.*.id, count.index)
+  name = format(var.secondary_hostname_format, count.index + 1)
+  size = 10
+  server_id = element(hcloud_server.secondary.*.id, count.index)
 }
 
 resource "hcloud_network" "kubernetes" {
@@ -80,18 +80,18 @@ resource "hcloud_network_subnet" "kubernetes" {
   ip_range     = var.subnet_ip_range
 }
 
-resource "hcloud_server_network" "master" {
-  count = var.master_count
+resource "hcloud_server_network" "primary" {
+  count = var.primary_count
 
   network_id = hcloud_network.kubernetes.id
-  server_id  = element(hcloud_server.master.*.id, count.index)
+  server_id = element(hcloud_server.primary.*.id, count.index)
 }
 
-resource "hcloud_server_network" "worker" {
-  count = var.worker_count
+resource "hcloud_server_network" "secondary" {
+  count = var.secondary_count
 
   network_id = hcloud_network.kubernetes.id
-  server_id  = element(hcloud_server.worker.*.id, count.index)
+  server_id = element(hcloud_server.secondary.*.id, count.index)
 }
 
 resource "hcloud_floating_ip" "loadbalancer" {
@@ -101,5 +101,5 @@ resource "hcloud_floating_ip" "loadbalancer" {
 
 resource "hcloud_floating_ip_assignment" "loadbalancer" {
   floating_ip_id = hcloud_floating_ip.loadbalancer.id
-  server_id      = element(hcloud_server.worker.*.id, 1)
+  server_id = element(hcloud_server.secondary.*.id, 1)
 }

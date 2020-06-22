@@ -13,19 +13,19 @@ variable "hcloud_token" {
   default = ""
 }
 
-variable "hcloud_master_count" {
+variable "hcloud_primary_count" {
   default = 0
 }
 
-variable "hcloud_worker_count" {
+variable "hcloud_secondary_count" {
   default = 0
 }
 
-variable "hcloud_master_hostname_format" {
+variable "hcloud_primary_hostname_format" {
   type = string
 }
 
-variable "hcloud_worker_hostname_format" {
+variable "hcloud_secondary_hostname_format" {
   type = string
 }
 
@@ -33,11 +33,11 @@ variable "hcloud_location" {
   type = string
 }
 
-variable "hcloud_master_type" {
+variable "hcloud_primary_type" {
   type = string
 }
 
-variable "hcloud_worker_type" {
+variable "hcloud_secondary_type" {
   type = string
 }
 

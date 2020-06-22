@@ -3,19 +3,19 @@ variable "token" {
   default = ""
 }
 
-variable "master_count" {
+variable "primary_count" {
   default = 0
 }
 
-variable "worker_count" {
+variable "secondary_count" {
   default = 0
 }
 
-variable "master_hostname_format" {
+variable "primary_hostname_format" {
   type = string
 }
 
-variable "worker_hostname_format" {
+variable "secondary_hostname_format" {
   type = string
 }
 
@@ -23,11 +23,11 @@ variable "location" {
   type = string
 }
 
-variable "master_type" {
+variable "primary_type" {
   type = string
 }
 
-variable "worker_type" {
+variable "secondary_type" {
   type = string
 }
 

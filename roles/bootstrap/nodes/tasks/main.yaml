@@ -38,14 +38,14 @@
         - '6783' # weave
         - '6784' # weave
 
-    - name: Allow etcd ports on master nodes
+    - name: Allow etcd ports on primary nodes
       ufw: rule=allow port={{ item }} proto=tcp
       when: "'kube-master' in group_names"
       with_items:
-      - '2379'
-      - '2380'
-      - '10251'
-      - '10252'
+        - '2379'
+        - '2380'
+        - '10251'
+        - '10252'
 
     - name: Allow etcd ports on nodes
       ufw: rule=allow from_port=30000 to_port=32767 proto=tcp

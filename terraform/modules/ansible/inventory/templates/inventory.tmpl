@@ -1,33 +1,33 @@
-%{ for host in master_hostnames ~}
-${host} ansible_host=${master_public_ips[host]} ip=${master_private_ips[host]}
+%{ for host in primary_hostnames ~}
+${host} ansible_host=${primary_public_ips[host]} ip=${primary_private_ips[host]}
 %{ endfor ~}
-%{ for host in worker_hostnames ~}
-${host} ansible_host=${worker_public_ips[host]} ip=${worker_private_ips[host]}
+%{ for host in secondary_hostnames ~}
+${host} ansible_host=${secondary_public_ips[host]} ip=${secondary_private_ips[host]}
 %{ endfor ~}
 
 [all]
-%{ for host in master_hostnames ~}
+%{ for host in primary_hostnames ~}
 ${host}
 %{ endfor ~}
-%{ for host in worker_hostnames ~}
+%{ for host in secondary_hostnames ~}
 ${host}
 %{ endfor ~}
 
 [kube-master]
-%{ for host in master_hostnames ~}
+%{ for host in primary_hostnames ~}
 ${host}
 %{ endfor ~}
 
 [etcd]
-%{ for host in master_hostnames ~}
+%{ for host in primary_hostnames ~}
 ${host}
 %{ endfor ~}
-%{ for host in worker_hostnames ~}
+%{ for host in secondary_hostnames ~}
 ${host}
 %{ endfor ~}
 
 [kube-node]
-%{ for host in worker_hostnames ~}
+%{ for host in secondary_hostnames ~}
 ${host}
 %{ endfor ~}
 

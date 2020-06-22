@@ -8,18 +8,18 @@ terraform {
 module "provider" {
   source = "./modules/infrastructure/hcloud"
 
-  master_count           = var.hcloud_master_count
-  worker_count           = var.hcloud_worker_count
-  master_hostname_format = var.hcloud_master_hostname_format
-  worker_hostname_format = var.hcloud_worker_hostname_format
+  primary_count = var.hcloud_primary_count
+  secondary_count = var.hcloud_secondary_count
+  primary_hostname_format = var.hcloud_primary_hostname_format
+  secondary_hostname_format = var.hcloud_secondary_hostname_format
 
-  token           = var.hcloud_token
-  ssh_keys        = var.hcloud_ssh_keys
-  location        = var.hcloud_location
-  master_type     = var.hcloud_master_type
-  worker_type     = var.hcloud_worker_type
-  image           = var.hcloud_image
-  ip_range        = var.hcloud_ip_range
+  token = var.hcloud_token
+  ssh_keys = var.hcloud_ssh_keys
+  location = var.hcloud_location
+  primary_type = var.hcloud_primary_type
+  secondary_type = var.hcloud_secondary_type
+  image = var.hcloud_image
+  ip_range = var.hcloud_ip_range
   subnet_ip_range = var.hcloud_subnet_ip_range
 }
 
@@ -35,13 +35,13 @@ module "dns" {
 module "inventory" {
   source = "./modules/ansible/inventory"
 
-  inventory_path     = var.ansible_inventory_path
-  master_hostnames   = module.provider.master_hostnames
-  master_private_ips = module.provider.master_private_ips
-  master_public_ips  = module.provider.master_public_ips
-  worker_hostnames   = module.provider.worker_hostnames
-  worker_private_ips = module.provider.worker_private_ips
-  worker_public_ips  = module.provider.worker_public_ips
+  inventory_path = var.ansible_inventory_path
+  primary_hostnames = module.provider.primary_hostnames
+  primary_private_ips = module.provider.primary_private_ips
+  primary_public_ips = module.provider.primary_public_ips
+  secondary_hostnames = module.provider.secondary_hostnames
+  secondary_private_ips = module.provider.secondary_private_ips
+  secondary_public_ips = module.provider.secondary_public_ips
 }
 
 module "group_vars" {

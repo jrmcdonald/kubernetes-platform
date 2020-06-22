@@ -2,26 +2,26 @@ output "loadbalancer_ip" {
   value = hcloud_floating_ip.loadbalancer.ip_address
 }
 
-output "master_hostnames" {
-  value = hcloud_server.master.*.name
+output "primary_hostnames" {
+  value = hcloud_server.primary.*.name
 }
 
-output "master_public_ips" {
-  value = zipmap(hcloud_server.master.*.name, hcloud_server.master.*.ipv4_address)
+output "primary_public_ips" {
+  value = zipmap(hcloud_server.primary.*.name, hcloud_server.primary.*.ipv4_address)
 }
 
-output "master_private_ips" {
-  value = zipmap(hcloud_server.master.*.name, hcloud_server_network.master.*.ip)
+output "primary_private_ips" {
+  value = zipmap(hcloud_server.primary.*.name, hcloud_server_network.primary.*.ip)
 }
 
-output "worker_hostnames" {
-  value = hcloud_server.worker.*.name
+output "secondary_hostnames" {
+  value = hcloud_server.secondary.*.name
 }
 
-output "worker_public_ips" {
-  value = zipmap(hcloud_server.worker.*.name, hcloud_server.worker.*.ipv4_address)
+output "secondary_public_ips" {
+  value = zipmap(hcloud_server.secondary.*.name, hcloud_server.secondary.*.ipv4_address)
 }
 
-output "worker_private_ips" {
-  value = zipmap(hcloud_server.worker.*.name, hcloud_server_network.worker.*.ip)
+output "secondary_private_ips" {
+  value = zipmap(hcloud_server.secondary.*.name, hcloud_server_network.secondary.*.ip)
 }
