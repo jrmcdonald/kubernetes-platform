@@ -21,7 +21,7 @@ hcloud_primary_type: cx21
 hcloud_primary_hostname_format: primary-%d
 
 hcloud_secondary_count: 2
-hcloud_secondary_type: cx21
+hcloud_secondary_type: cx31
 hcloud_secondary_hostname_format: secondary-%d
 
 hcloud_ssh_keys:
