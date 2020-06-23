@@ -30,6 +30,7 @@
     values:
       git:
         url: git@github.com:jrmcdonald/helm-charts
+        branch: main
 
 - name: Weave Flux | Deploy Helm Operator
   community.kubernetes.helm:
