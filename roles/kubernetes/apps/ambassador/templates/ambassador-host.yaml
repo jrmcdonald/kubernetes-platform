@@ -1,0 +1,9 @@
+---
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  name: ambassador
+spec:
+  hostname: {{ api_domain }}
+  acmeProvider:
+    email: {{ issuer_email }}

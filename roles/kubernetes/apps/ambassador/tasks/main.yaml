@@ -5,18 +5,6 @@
     name: "{{ ambassador_namespace }}"
     wait: true
 
-- name: Ambassador | Download CRD
-  get_url:
-    url: https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-crds.yaml
-    dest: "{{ role_path }}/files/ambassador-operator.crds.yaml"
-  check_mode: always
-
-- name: Ambassador | Apply CRD
-  community.kubernetes.k8s:
-    state: present
-    apply: yes
-    definition: "{{ lookup('file', 'ambassador-operator.crds.yaml') }}"
-
 - name: Ambassador | Add Datawire Repository
   community.kubernetes.helm_repository:
     name: datawire
@@ -24,14 +12,15 @@
 
 - name: Ambassador | Deploy
   community.kubernetes.helm:
-    name: ambassador-operator
-    chart_ref: datawire/ambassador-operator
+    name: ambassador
+    chart_ref: datawire/ambassador
     release_namespace: "{{ ambassador_namespace }}"
 
 - name: Ambassador | Define Deployment Templates
   set_fact:
     ambassador_deployment_templates:
-      - { name: installation, file: ambassador-installation.yaml }
+      - { name: module, file: ambassador-module.yaml }
+      - { name: host, file: ambassador-host.yaml }
 
 - name: Ambassador | Apply Deployment Files
   community.kubernetes.k8s:
