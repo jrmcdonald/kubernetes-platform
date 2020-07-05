@@ -1,1 +1,3 @@
 ambassador_namespace: ambassador
+issuer_email: jamie@qwyck.net
+api_domain: api.qwyck-cloud.co.uk

@@ -56,7 +56,6 @@
     - { role: kubernetes/apps/metallb, tags: apps }
     - { role: kubernetes/apps/hcloud/fip-controller, tags: apps }
     - { role: kubernetes/apps/rook-ceph, tags: apps }
-    - { role: kubernetes/apps/cert-manager, tags: apps }
     - { role: kubernetes/apps/ambassador, tags: apps }
     - { role: kubernetes/apps/sealed-secrets, tags: apps }
     - { role: kubernetes/apps/monitoring, tags: apps }
