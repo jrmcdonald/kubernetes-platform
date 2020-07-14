@@ -1,11 +1,9 @@
 ---
 apiVersion: getambassador.io/v2
-kind: AmbassadorInstallation
+kind:  Module
 metadata:
-  name: ambassador
+  name:  ambassador
 spec:
-  installOSS: true
-  version: 1.*
   config:
     diagnostics:
       enabled: false
