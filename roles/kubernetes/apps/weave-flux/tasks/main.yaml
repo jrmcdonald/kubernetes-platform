@@ -14,7 +14,7 @@
 - name: Weave Flux | Apply CRD
   community.kubernetes.k8s:
     state: present
-    apply: yes
+    apply: yesw
     definition: "{{ lookup('file', 'weave-flux.crds.yaml') }}"
 
 - name: Weave Flux | Add Fluxcd Repository
@@ -31,6 +31,7 @@
       git:
         url: git@github.com:jrmcdonald/helm-charts
         branch: main
+        path: namespaces,releases
 
 - name: Weave Flux | Deploy Helm Operator
   community.kubernetes.helm:
